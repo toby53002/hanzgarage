@@ -269,9 +269,17 @@
     return button;
   }
 
+  function hydrateWindowAssets(win) {
+    if (!win) return;
+    win.querySelectorAll('img[data-src]').forEach(img => {
+      if (!img.getAttribute('src')) img.src = img.dataset.src;
+    });
+  }
+
   function openWindow(id, options = {}) {
     const win = document.getElementById(id);
     if (!win) return;
+    hydrateWindowAssets(win);
     closeStartMenu();
     closeContextMenu();
     placeWindow(win);
@@ -563,7 +571,7 @@
   const explorerPages = {
     computer: {title:'Tento počítač',detail:'Systémová složka',status:'5 objektů',html:document.getElementById('computerFiles')?.innerHTML || ''},
     documents: {title:'Hanz dokumenty',detail:'Složka se soubory',status:'3 objektů',html:`<section class="explorer-group"><h3>Hanz dokumenty</h3><div class="explorer-items"><button class="explorer-item" data-app="notepadWindow"><span class="explorer-item-icon">📄</span><span>poznamky.txt</span></button><button class="explorer-item" data-app="paintWindow"><span class="explorer-item-icon">🖼️</span><span>novy-obrazek.png</span></button><button class="explorer-item explorer-nav" data-explorer-target="shared"><span class="explorer-item-icon folder-xp-icon"></span><span>Sdílené dokumenty</span></button></div></section>`},
-    shared: {title:'Sdílené dokumenty',detail:'Sdílená složka',status:'5 objektů',html:`<section class="explorer-group"><h3>Sdílené dokumenty</h3><div class="explorer-items"><a class="explorer-item" href="https://www.instagram.com/hanz.mrdke" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/hanz-icon-norm.png" alt=""></span><span>Hanz Instagram</span></a><a class="explorer-item" href="https://www.youtube.com/@Nachtfahrer_podcast" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/youtube-icon-norm.png" alt=""></span><span>YouTube</span></a><a class="explorer-item" href="https://herohero.co/nachtfahrer" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/herohero-icon-norm.png" alt=""></span><span>HeroHero</span></a><a class="explorer-item" href="https://www.patreon.com/Nachtfahrer" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/patreon-icon-norm.png" alt=""></span><span>Patreon</span></a><a class="explorer-item" href="https://www.instagram.com/nachtfahrerpodcast/" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/nachtfahrer-icon-norm.png" alt=""></span><span>Nachtfahrer Podcast</span></a></div></section>`},
+    shared: {title:'Sdílené dokumenty',detail:'Sdílená složka',status:'5 objektů',html:`<section class="explorer-group"><h3>Sdílené dokumenty</h3><div class="explorer-items"><a class="explorer-item" href="https://www.instagram.com/hanz.mrdke" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/hanz-icon-norm.webp" alt=""></span><span>Hanz Instagram</span></a><a class="explorer-item" href="https://www.youtube.com/@Nachtfahrer_podcast" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/youtube-icon-norm.webp" alt=""></span><span>YouTube</span></a><a class="explorer-item" href="https://herohero.co/nachtfahrer" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/herohero-icon-norm.webp" alt=""></span><span>HeroHero</span></a><a class="explorer-item" href="https://www.patreon.com/Nachtfahrer" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/patreon-icon-norm.webp" alt=""></span><span>Patreon</span></a><a class="explorer-item" href="https://www.instagram.com/nachtfahrerpodcast/" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon"><img src="./assets/nachtfahrer-icon-norm.webp" alt=""></span><span>Nachtfahrer Podcast</span></a></div></section>`},
     network: {title:'Místa v síti',detail:'Síťová složka',status:'3 objektů',html:`<section class="explorer-group"><h3>Místa v síti</h3><div class="explorer-items"><a class="explorer-item" href="https://www.instagram.com/hanz.mrdke" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon">🌐</span><span>Hanz</span></a><a class="explorer-item" href="https://www.instagram.com/nachtfahrerpodcast/" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon">🌐</span><span>Nachtfahrer Podcast</span></a><a class="explorer-item" href="https://www.youtube.com/@Nachtfahrer_podcast" target="_blank" rel="noopener noreferrer"><span class="explorer-item-icon">🌐</span><span>YouTube</span></a></div></section>`}
   };
   function updateExplorerHistoryButtons(){document.getElementById('explorerBack')?.classList.toggle('is-disabled',explorerHistoryIndex<=0);document.getElementById('explorerForward')?.classList.toggle('is-disabled',explorerHistoryIndex>=explorerHistory.length-1)}
@@ -623,9 +631,9 @@
   const wmpVizModeButton = document.getElementById('wmpVizModeButton');
   const wmpCoverButton = document.getElementById('wmpCoverButton');
   const WMP_DEFAULT_TRACK = `${AUDIO_BASE}/Nachtfahrer.mp3`;
-  const WMP_COVER_NACHT = './assets/nachtfahrer-cover-user.webp';
-  const WMP_COVER_KISS = './assets/radio-kiss-cover-user.webp';
-  const WMP_COVER_GENERIC = './assets/wmp-icon-norm.png';
+  const WMP_COVER_NACHT = `${MEDIA_BASE}/nachtfahrer-cover-user.webp`;
+  const WMP_COVER_KISS = `${MEDIA_BASE}/radio-kiss-cover-user.webp`;
+  const WMP_COVER_GENERIC = './assets/wmp-icon-norm.webp';
   const WMP_KISS_STREAMS = [
     'https://icecast1.play.cz/kiss128.mp3',
     'https://icecast4.play.cz/kiss128.mp3'
@@ -1028,7 +1036,7 @@
   const wmpVisualizer = document.getElementById('wmpVisualizer');
   const wmpBuiltInTrack = document.getElementById('wmpBuiltInTrack');
   const wmpThemeSizes = {1:[346,344],2:[269,363],3:[619,367],4:[237,306],5:[345,213],6:[319,239]};
-  const wmpThemeSources = {1:'./assets/wmp-skin-1-interactive.png',2:'./assets/wmp-skin-2.png',3:'./assets/wmp-skin-3-interactive.png',4:'./assets/wmp-skin-4.png',5:'./assets/wmp-skin-5-interactive.png',6:'./assets/wmp-skin-6-interactive.png'};
+  const wmpThemeSources = {1:'https://github.com/toby53002/hanzgarage/releases/download/media/wmp-skin-1-interactive.webp',2:'https://github.com/toby53002/hanzgarage/releases/download/media/wmp-skin-2.webp',3:'https://github.com/toby53002/hanzgarage/releases/download/media/wmp-skin-3-interactive.webp',4:'https://github.com/toby53002/hanzgarage/releases/download/media/wmp-skin-4.webp',5:'https://github.com/toby53002/hanzgarage/releases/download/media/wmp-skin-5-interactive.webp',6:'https://github.com/toby53002/hanzgarage/releases/download/media/wmp-skin-6-interactive.webp'};
   let currentWmpTheme = 1;
 
   function fitWmpWindowToDesktop(width, height) {
@@ -1055,7 +1063,7 @@
     if (!wmpSkinStage || !wmpSkinArt) return;
     wmpSkinStage.className = `wmp-skin-stage theme-${theme}`;
     wmpSkinStage.classList.toggle('is-radio', wmpRadioMode);
-    wmpSkinArt.src = wmpThemeSources[theme] || `./assets/wmp-skin-${theme}.png`;
+    wmpSkinArt.src = wmpThemeSources[theme] || `${MEDIA_BASE}/wmp-skin-1-interactive.webp`;
     const [w,h] = wmpThemeSizes[theme];
     fitWmpWindowToDesktop(w,h);
     document.querySelectorAll('[data-wmp-theme]').forEach(b=>b.classList.toggle('is-selected', Number(b.dataset.wmpTheme)===theme));
@@ -1064,7 +1072,20 @@
   try { currentWmpTheme = Number(localStorage.getItem('hanzWmpTheme')) || 1; } catch {}
   applyWmpTheme(currentWmpTheme, false);
 
-  wmpThemeButton?.addEventListener('click', e => { e.stopPropagation(); if(wmpThemeMenu) wmpThemeMenu.hidden=!wmpThemeMenu.hidden; if(wmpLibraryPanel) wmpLibraryPanel.hidden=true; });
+  function hydrateWmpThemePreviews() {
+    document.querySelectorAll('img[data-wmp-preview][data-src]').forEach(img => {
+      if (!img.getAttribute('src')) img.src = img.dataset.src;
+    });
+  }
+  wmpThemeButton?.addEventListener('click', e => {
+    e.stopPropagation();
+    if (wmpThemeMenu) {
+      const willOpen = wmpThemeMenu.hidden;
+      if (willOpen) hydrateWmpThemePreviews();
+      wmpThemeMenu.hidden = !wmpThemeMenu.hidden;
+    }
+    if(wmpLibraryPanel) wmpLibraryPanel.hidden=true;
+  });
   wmpLibraryButton?.addEventListener('click', e => { e.stopPropagation(); if(wmpLibraryPanel) wmpLibraryPanel.hidden=!wmpLibraryPanel.hidden; if(wmpThemeMenu) wmpThemeMenu.hidden=true; });
   document.querySelectorAll('[data-wmp-theme]').forEach(b=>b.addEventListener('click',()=>{applyWmpTheme(b.dataset.wmpTheme); if(wmpThemeMenu)wmpThemeMenu.hidden=true;}));
   wmpBuiltInTrack?.addEventListener('click',()=>{
@@ -1074,7 +1095,7 @@
     loadWmpSource(WMP_DEFAULT_TRACK,'Nachtfahrer.mp3',true);
   });
   wmpSkinStage?.addEventListener('dblclick', e=>{ if(!e.target.closest('button,input,.wmp-theme-menu,.wmp-library-panel')) toggleWmpPlayback(); });
-  wmpSkinStage?.addEventListener('contextmenu', e=>{if(e.target.closest('button,input'))return;e.preventDefault();if(wmpThemeMenu){wmpThemeMenu.hidden=false;if(wmpLibraryPanel)wmpLibraryPanel.hidden=true;}});
+  wmpSkinStage?.addEventListener('contextmenu', e=>{if(e.target.closest('button,input'))return;e.preventDefault();if(wmpThemeMenu){hydrateWmpThemePreviews();wmpThemeMenu.hidden=false;if(wmpLibraryPanel)wmpLibraryPanel.hidden=true;}});
   wmpSkinStage?.addEventListener('wheel', e=>{
     if(!wmpAudio || e.target.closest('.wmp-theme-menu,.wmp-library-panel')) return;
     e.preventDefault();
@@ -2269,8 +2290,8 @@
   const recycleList=document.getElementById('recycleList'),recycleStatus=document.getElementById('recycleStatus'),recycleEmptyState=document.getElementById('recycleEmptyState'),recycleSelectionStatus=document.getElementById('recycleSelectionStatus');
   const RECYCLE_STORAGE='hanzRecycleBinV2',RECYCLE_DELETED_STORAGE='hanzRecycleDeletedDesktopV1';
   const recycleDefaults=[
-    {id:'old-logo',name:'stare-logo.png',location:'C:\\Documents and Settings\\Hanz\\Obrázky',date:'13. 8. 2026 18:42',icon:'./assets/paint-icon-norm.png',kind:'file'},
-    {id:'notes',name:'napad-na-web.txt',location:'C:\\Documents and Settings\\Hanz\\Dokumenty',date:'13. 8. 2026 19:06',icon:'./assets/notepad-icon-norm.png',kind:'file'},
+    {id:'old-logo',name:'stare-logo.png',location:'C:\\Documents and Settings\\Hanz\\Obrázky',date:'13. 8. 2026 18:42',icon:'./assets/paint-icon-norm.webp',kind:'file'},
+    {id:'notes',name:'napad-na-web.txt',location:'C:\\Documents and Settings\\Hanz\\Dokumenty',date:'13. 8. 2026 19:06',icon:'./assets/notepad-icon-norm.webp',kind:'file'},
     {id:'temp',name:'setup-old.tmp',location:'C:\\WINDOWS\\Temp',date:'13. 8. 2026 20:11',icon:'./assets/system-icon.svg',kind:'file'}
   ];
   let recycleItems=[...recycleDefaults],recycleSelectedIds=new Set(),permanentlyDeletedDesktopKeys=new Set();
@@ -2522,7 +2543,7 @@
     const solid={blue:'#3a6ea5',black:'#000',green:'#2e8b57'};
     const isImage=wallpaper==='bliss'||(wallpaper==='custom'&&customWallpaperObjectUrl);
     target.style.backgroundColor=solid[wallpaper]||(wallpaper==='custom'?'#5ea1e9':'#5ea1e9');
-    target.style.backgroundImage=wallpaper==='bliss'?"url('./assets/xp-wallpaper.webp')":wallpaper==='custom'&&customWallpaperObjectUrl?`url("${customWallpaperObjectUrl}")`:'none';
+    target.style.backgroundImage=wallpaper==='bliss'?`url("${MEDIA_BASE}/xp-wallpaper.webp")`:wallpaper==='custom'&&customWallpaperObjectUrl?`url("${customWallpaperObjectUrl}")`:'none';
     target.style.backgroundPosition='center';
     target.style.backgroundRepeat=position==='repeat'&&isImage?'repeat':'no-repeat';
     if(position==='repeat'&&isImage)target.style.backgroundSize=isPreview?'82px auto':'auto';
