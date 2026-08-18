@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#245edb" />
+  <meta name="description" content="Hanz Garage" />
+  <title>Hanz Garage</title>
+  <link rel="icon" type="image/png" href="./assets/favicon.png" />
+  <link rel="preload" href="./assets/hanz-garage-logo.png" as="image" />
+  <link rel="preload" href="./assets/coming-soon.png" as="image" />
+  <link rel="preload" href="./assets/xp-wallpaper.jpg" as="image" />
+  <link rel="preload" href="./assets/xp-loading.gif" as="image" />
+  <link rel="preload" href="./assets/minesweeper-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/paint-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/wmp-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/xp-startup.mp3" as="audio" type="audio/mpeg" />
+  <link rel="preload" href="./assets/nachtfahrer-cover.png" as="image" />
+  <link rel="preload" href="./assets/hanz-desktop-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/notepad-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/calculator-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/computer-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/youtube-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/herohero-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/patreon-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/solitaire-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/taskmgr-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/recycle-bin-xp.png" as="image" />
+  <link rel="preload" href="./assets/display-icon.svg" as="image" />
+  <link rel="preload" href="./assets/system-icon.svg" as="image" />
+  <link rel="preload" href="./assets/hanz-center-icon.png" as="image" />
+  <link rel="preload" href="./assets/logoff-xp.png" as="image" />
+  <link rel="preload" href="./assets/shutdown-xp.png" as="image" />
+  <link rel="preload" href="./assets/cmd-icon-norm.png" as="image" />
+  <link rel="preload" href="./assets/ie-icon-norm.png" as="image" />
+  <link rel="stylesheet" href="./styles.css" />
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head>
+<body>
+  <main id="app" aria-label="Hanz Garage XP">
+    <section class="screen boot-screen is-active" id="bootScreen" aria-live="polite" aria-hidden="false">
+      <div class="boot-crt" aria-hidden="true"></div>
+      <div class="boot-vignette" aria-hidden="true"></div>
+      <div class="boot-center">
+        <img class="boot-logo" src="./assets/hanz-garage-logo.png" alt="Hanz Garage" draggable="false" />
+        <img class="boot-loading-gif" src="./assets/xp-loading.gif" alt="Načítání systému" draggable="false" />
+      </div>
+      <div class="boot-footer" aria-hidden="true">
+        <span>Copyright © Hanz Garage</span>
+        <span>Professional Edition</span>
+      </div>
+    </section>
+
+    <section class="screen welcome-screen" id="welcomeScreen" aria-hidden="true">
+      <div class="welcome-top"></div>
+      <div class="welcome-main">
+        <div class="welcome-mark-wrap">
+          <img class="welcome-mark" src="./assets/hanz-garage-logo.png" alt="" draggable="false" />
+        </div>
+        <div class="welcome-word">Vítejte</div>
+      </div>
+      <div class="welcome-bottom"></div>
+    </section>
+
+    <section class="screen desktop" id="desktop" aria-hidden="true">
+      <div class="wallpaper" aria-hidden="true"></div>
+      <div class="desktop-glass" aria-hidden="true"></div>
+
+      <div class="desktop-shortcuts" id="desktopShortcuts" aria-label="Ikony na ploše">
+        <button class="desktop-shortcut" type="button" data-app="mascotWindow">
+          <img class="desktop-icon-img desktop-hanz-icon" src="./assets/hanz-desktop-icon-norm.png" alt="" />
+          <span>Hanz Garage</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="minesweeperWindow">
+          <img class="desktop-icon-img mine-desktop-icon" src="./assets/minesweeper-icon-norm.png" alt="" />
+          <span>Hledání min</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="solitaireWindow">
+          <img class="desktop-icon-img" src="./assets/solitaire-icon-norm.png" alt="" />
+          <span>Solitaire</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="paintWindow">
+          <img class="desktop-icon-img" src="./assets/paint-icon-norm.png" alt="" />
+          <span>Malování</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="notepadWindow">
+          <img class="desktop-icon-img" src="./assets/notepad-icon-norm.png" alt="" />
+          <span>Poznámkový blok</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="calculatorWindow">
+          <img class="desktop-icon-img" src="./assets/calculator-icon-norm.png" alt="" />
+          <span>Kalkulačka</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="computerWindow">
+          <img class="desktop-icon-img" src="./assets/computer-icon-norm.png" alt="" />
+          <span>Tento počítač</span>
+        </button>
+        <button class="desktop-shortcut desktop-recycle-shortcut" id="desktopRecycleBin" type="button" data-app="recycleBinWindow" data-lock-position="bottom-right">
+          <img class="desktop-icon-img" src="./assets/recycle-bin-xp.png" alt="" />
+          <span>Koš</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="taskManagerWindow">
+          <img class="desktop-icon-img" src="./assets/taskmgr-icon-norm.png" alt="" />
+          <span>Správce úloh</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="internetExplorerWindow">
+          <img class="desktop-icon-img" src="./assets/ie-icon-norm.png" alt="" />
+          <span>Internet Explorer</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="cmdWindow">
+          <img class="desktop-icon-img" src="./assets/cmd-icon-norm.png" alt="" />
+          <span>Příkazový řádek</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="mediaPlayerWindow">
+          <img class="desktop-icon-img wmp-desktop-icon" src="./assets/wmp-icon-norm.png" alt="" />
+          <span>Windows Media Player</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="hanzCenterWindow">
+          <img class="desktop-icon-img hanz-center-desktop-icon" src="./assets/hanz-center-icon.png" alt="" />
+          <span>Hanz Centrum</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="soundRecorderWindow">
+          <img class="desktop-icon-img sound-recorder-desktop-icon" src="./assets/sound-recorder-icon.png" alt="" />
+          <span>Záznam zvuku</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="snakeWindow">
+          <img class="desktop-icon-img snake-desktop-icon" src="./assets/snake-icon.png" alt="" />
+          <span>Had</span>
+        </button>
+        <button class="desktop-shortcut" type="button" data-app="archiveWindow">
+          <img class="desktop-icon-img archive-desktop-icon" src="./assets/archive-folder-icon.png" alt="" />
+          <span>Archiv</span>
+        </button>
+        <button class="desktop-shortcut external-shortcut" type="button" data-url="https://www.youtube.com/@Nachtfahrer_podcast">
+          <img class="desktop-icon-img social-desktop-icon" src="./assets/youtube-icon-norm.png" alt="" />
+          <span>YouTube</span>
+        </button>
+        <button class="desktop-shortcut external-shortcut" type="button" data-url="https://herohero.co/nachtfahrer">
+          <img class="desktop-icon-img social-desktop-icon" src="./assets/herohero-icon-norm.png" alt="" />
+          <span>HeroHero</span>
+        </button>
+        <button class="desktop-shortcut external-shortcut" type="button" data-url="https://www.patreon.com/Nachtfahrer">
+          <img class="desktop-icon-img social-desktop-icon" src="./assets/patreon-icon-norm.png" alt="" />
+          <span>Patreon</span>
+        </button>
+      </div>
+
+      <section class="xp-window mascot-window" id="mascotWindow" data-title="Hanz Garage" data-icon="./assets/hanz-icon-norm.png" data-width="560" data-height="760" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/hanz-icon-norm.png" alt="" />Hanz Garage</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="mascot-window-body">
+          <a href="https://www.instagram.com/hanz.mrdke" target="_blank" rel="noopener noreferrer" class="mascot-window-link" aria-label="Instagram Hanz">
+            <img src="./assets/coming-soon.png" class="mascot-window-image" alt="Ještě na tom makáme, kámo. Na dobrý věci se vyplatí počkat! Zatím to tady můžeš omrknout a sledovat Hanze pro další info." />
+          </a>
+          <button class="mascot-ok-hotspot" id="mascotOkButton" type="button" aria-label="OK – přesunout okno"></button>
+          <button class="mascot-close-hotspot" id="mascotSignCloseButton" type="button" aria-label="Zavřít Hanz Garage"></button>
+        </div>
+        <div class="xp-statusbar"><span>Kliknutím na obrázek otevřeš Instagram</span><span>Online</span></div>
+      </section>
+
+      <section class="xp-window minesweeper-window" id="minesweeperWindow" data-title="Hledání min" data-icon="./assets/minesweeper-icon-norm.png" data-width="300" data-height="410" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/minesweeper-icon-norm.png" alt="" />Hledání min</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="xp-menubar"><button id="newMineGame">Hra</button><button id="mineHelp">Nápověda</button></div>
+        <div class="mine-body">
+          <div class="mine-toolbar">
+            <label>Obtížnost
+              <select id="mineDifficulty">
+                <option value="beginner">Začátečník (9×9, 10)</option>
+                <option value="intermediate">Pokročilý (16×16, 40)</option>
+                <option value="expert">Expert (30×16, 99)</option>
+              </select>
+            </label>
+            <button id="mineTouchMode" type="button" aria-pressed="false">Dotyk: odkrytí</button>
+          </div>
+          <div class="mine-status">
+            <div class="mine-counter" id="mineCounter">010</div>
+            <button class="mine-reset" id="mineReset" type="button" aria-label="Nová hra">🙂</button>
+            <div class="mine-counter" id="mineTimer">000</div>
+          </div>
+          <div class="mine-scroll"><div class="mine-grid" id="mineGrid" aria-label="Hrací plocha Hledání min"></div></div>
+          <div class="mine-hint">Levé = odkrytí • pravé = vlaječka / ? • mobil: podrž nebo zapni režim vlaječky • klik na odkryté číslo = otevření okolí</div>
+        </div>
+      </section>
+
+      <section class="xp-window solitaire-window" id="solitaireWindow" data-title="Solitaire" data-icon="./assets/solitaire-icon-norm.png" data-width="940" data-height="690" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/solitaire-icon-norm.png" alt="" />Solitaire</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="xp-menubar solitaire-menubar">
+          <button id="solNewGame" type="button">Hra</button>
+          <button id="solHint" type="button">Tah</button>
+          <button id="solHelp" type="button">Nápověda</button>
+          <span class="sol-menu-spacer"></span>
+          <label>Rozdávat
+            <select id="solDrawMode"><option value="3">po třech</option><option value="1">po jedné</option></select>
+          </label>
+          <label>Skóre
+            <select id="solScoreMode"><option value="standard">Standardní</option><option value="vegas">Las Vegas</option><option value="none">Žádné</option></select>
+          </label>
+          <label class="sol-timed-label"><input id="solTimed" type="checkbox" checked /> Čas</label>
+          <button id="solAutoFinish" type="button" title="Přesunout dostupné karty do základů">Automaticky dokončit</button>
+        </div>
+        <div class="solitaire-board" id="solitaireBoard" aria-label="Hrací plocha Solitaire"></div>
+        <div class="xp-statusbar solitaire-status"><span id="solScore">Skóre: 0</span><span id="solMessage">Nová hra</span><span id="solTime">Čas: 0</span></div>
+      </section>
+
+      <section class="xp-window paint-window" id="paintWindow" data-title="Malování" data-icon="./assets/paint-icon-norm.png" data-width="760" data-height="590" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/paint-icon-norm.png" alt="" /><span id="paintWindowCaption">untitled - Paint</span></div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="xp-menubar paint-menubar">
+          <button id="paintNew" type="button">File</button><button id="paintUndo" type="button">Edit</button><button id="paintView" type="button">View</button><button id="paintImageMenu" type="button">Image</button><button id="paintColorsMenu" type="button">Colors</button><button id="paintHelp" type="button">Help</button>
+        </div>
+        <div class="paint-workspace paint-classic-workspace">
+          <aside class="paint-tools-panel" aria-label="Nástroje Malování">
+            <div class="paint-tools" aria-label="Nástroje">
+              <button class="paint-tool" type="button" data-tool="free-select" title="Free-Form Select"><img src="./assets/paint-tools/free-select.png" alt="" /></button>
+              <button class="paint-tool is-selected" type="button" data-tool="select" title="Select"><img src="./assets/paint-tools/select.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="eraser" title="Eraser/Color Eraser"><img src="./assets/paint-tools/eraser.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="fill" title="Fill With Color"><img src="./assets/paint-tools/fill.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="eyedropper" title="Pick Color"><img src="./assets/paint-tools/eyedropper.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="magnifier" title="Magnifier"><img src="./assets/paint-tools/magnifier.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="pencil" title="Pencil"><img src="./assets/paint-tools/pencil.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="brush" title="Brush"><img src="./assets/paint-tools/brush.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="airbrush" title="Airbrush"><img src="./assets/paint-tools/airbrush.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="text" title="Text"><img src="./assets/paint-tools/text.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="line" title="Line"><img src="./assets/paint-tools/line.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="curve" title="Curve"><img src="./assets/paint-tools/curve.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="rectangle" title="Rectangle"><img src="./assets/paint-tools/rectangle.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="polygon" title="Polygon"><img src="./assets/paint-tools/polygon.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="ellipse" title="Ellipse"><img src="./assets/paint-tools/ellipse.png" alt="" /></button>
+              <button class="paint-tool" type="button" data-tool="rounded-rectangle" title="Rounded Rectangle"><img src="./assets/paint-tools/rounded-rectangle.png" alt="" /></button>
+            </div>
+            <div class="paint-tool-options-classic">
+              <div class="paint-option-preview paint-line-preview" aria-hidden="true"><i></i><i></i><i></i></div>
+              <label class="paint-size-label" title="Tloušťka">Size <input id="paintSize" type="range" min="1" max="32" value="4" /></label>
+              <label class="paint-fill-option"><input id="paintShapeFill" type="checkbox" /> Fill</label>
+              <label class="paint-transparent-option"><input id="paintTransparentSelection" type="checkbox" /> Transparent</label>
+            </div>
+          </aside>
+          <div class="paint-main paint-classic-main">
+            <div class="paint-canvas-wrap" id="paintCanvasWrap">
+              <canvas id="paintCanvas" width="900" height="560"></canvas>
+              <div class="paint-selection-marquee" id="paintSelectionMarquee" hidden></div>
+              <div class="paint-selection-overlay" id="paintSelectionOverlay" hidden><canvas id="paintSelectionCanvas"></canvas></div>
+            </div>
+            <div class="paint-bottom-panel">
+              <div class="paint-color-preview-classic" title="Foreground / Background colors"><i id="paintPrimaryPreview"></i><i id="paintSecondaryPreview"></i></div>
+              <div class="paint-palette" id="paintPalette" aria-label="Paleta barev"></div>
+            </div>
+          </div>
+        </div>
+        <div class="paint-hidden-controls" aria-hidden="true">
+          <button id="paintNewButton" type="button">Nový</button><button id="paintOpenButton" type="button">Otevřít</button><button id="paintSaveButton" type="button">Uložit</button><button id="paintUndoButton" type="button">Zpět</button><button id="paintRedoButton" type="button">Znovu</button><button id="paintClear" type="button">Clear</button>
+          <select id="paintZoom"><option>50%</option><option selected>100%</option><option>150%</option><option>200%</option><option>400%</option><option>800%</option></select>
+          <input id="paintTextSize" type="number" min="8" max="72" value="24" />
+          <span id="paintToolLabel">Select</span><input id="paintFileInput" type="file" accept="image/*" />
+        </div>
+        <div class="xp-statusbar paint-statusbar"><span id="paintStatus">For Help, click Help Topics on the Help Menu.</span><span id="paintCoords"></span></div>
+      </section>
+
+      <section class="xp-window notepad-window" id="notepadWindow" data-title="Poznámkový blok" data-icon="./assets/notepad-icon-norm.png" data-width="620" data-height="470" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/notepad-icon-norm.png" alt="" />bez názvu – Poznámkový blok</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="xp-menubar"><button id="noteSave">Soubor</button><button id="noteClear">Úpravy</button><button id="noteFormat">Formát</button><button id="noteView">Zobrazit</button><button id="noteHelp">Nápověda</button><input id="noteOpenInput" type="file" accept="text/plain,.txt" hidden /></div>
+        <textarea id="notepadArea" class="notepad-area" spellcheck="false" aria-label="Text poznámkového bloku">Hanz Garage
+
+Web se připravuje. 🚗</textarea>
+        <div class="xp-statusbar"><span id="noteStatus">Řádek 1, sloupec 1</span><span>UTF-8</span></div>
+      </section>
+
+      <section class="xp-window calculator-window" id="calculatorWindow" data-title="Kalkulačka" data-icon="./assets/calculator-icon-norm.png" data-width="315" data-height="420" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/calculator-icon-norm.png" alt="" />Kalkulačka</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="xp-menubar"><button id="calcView">Zobrazit</button><button id="calcHelp">Nápověda</button></div>
+        <div class="calculator-body">
+          <div class="calculator-display" id="calculatorDisplay">0</div>
+          <div class="calculator-memory">M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Backspace&nbsp;&nbsp;CE&nbsp;&nbsp;C</div>
+          <div class="calculator-grid" id="calculatorGrid"></div>
+        </div>
+      </section>
+
+      <section class="xp-window computer-window" id="computerWindow" data-title="Tento počítač" data-icon="./assets/computer-icon-norm.png" data-width="760" data-height="560" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/computer-icon-norm.png" alt="" />Tento počítač</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat"><span>_</span></button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat"><span>□</span></button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít"><span>×</span></button>
+          </div>
+        </div>
+        <div class="xp-menubar explorer-menubar"><button id="explorerFileMenu">Soubor</button><button id="explorerEditMenu">Úpravy</button><button id="explorerViewMenu">Zobrazit</button><button id="explorerFavoritesMenu">Oblíbené</button><button id="explorerToolsMenu">Nástroje</button><button id="explorerHelpMenu">Nápověda</button></div>
+        <div class="explorer-toolbar xp-explorer-toolbar">
+          <button class="explorer-tool is-disabled" id="explorerBack" title="Zpět"><span class="toolbar-glyph back-glyph">←</span><span>Zpět</span></button>
+          <button class="explorer-tool is-disabled" id="explorerForward" title="Vpřed"><span class="toolbar-glyph forward-glyph">→</span></button>
+          <span class="toolbar-separator"></span>
+          <button class="explorer-tool" id="explorerUp" title="O úroveň výš"><span class="toolbar-glyph up-glyph">↥</span></button>
+          <button class="explorer-tool" id="explorerSearch" title="Hledat"><span class="toolbar-glyph search-glyph">🔍</span><span>Hledat</span></button>
+          <button class="explorer-tool is-pressed" id="explorerFolders" title="Složky"><span class="toolbar-glyph folder-glyph">📁</span><span>Složky</span></button>
+          <span class="toolbar-separator"></span>
+          <button class="explorer-tool" id="explorerViews" title="Zobrazení"><span class="toolbar-glyph view-glyph">▦</span><span class="toolbar-caret">▾</span></button>
+        </div>
+        <div class="address-bar xp-address-bar"><span>Adresa</span><img src="./assets/computer-icon-norm.png" alt="" /><input id="explorerAddress" value="Tento počítač" readonly /><button id="explorerGo">Přejít</button></div>
+        <div class="explorer-searchbar" id="explorerSearchbar" hidden><label>Hledat: <input id="explorerSearchInput" type="search" placeholder="Název souboru nebo programu" /></label><button id="explorerSearchClear" type="button">Vymazat</button></div>
+        <div class="computer-content" id="computerContent">
+          <aside class="computer-sidebar" id="computerSidebar">
+            <div class="xp-task-panel">
+              <div class="xp-task-panel-title">Práce se systémem <button class="panel-collapse" type="button" aria-label="Sbalit">⌃</button></div>
+              <div class="xp-task-panel-body">
+                <button data-app="systemPropertiesWindow"><span class="task-panel-icon">🖥️</span>Zobrazit systémové informace</button>
+                <button data-app="controlPanelWindow"><span class="task-panel-icon">⚙️</span>Přidat nebo odebrat programy</button>
+                <button data-app="controlPanelWindow"><span class="task-panel-icon">🛠️</span>Změnit nastavení</button>
+              </div>
+            </div>
+            <div class="xp-task-panel">
+              <div class="xp-task-panel-title">Další místa <button class="panel-collapse" type="button" aria-label="Sbalit">⌃</button></div>
+              <div class="xp-task-panel-body">
+                <button class="explorer-nav" data-explorer-target="network"><span class="task-panel-icon">🌐</span>Místa v síti</button>
+                <button class="explorer-nav" data-explorer-target="documents"><span class="task-panel-icon">📁</span>Dokumenty</button>
+                <button class="explorer-nav" data-explorer-target="shared"><span class="task-panel-icon">📂</span>Sdílené dokumenty</button><button data-app="recycleBinWindow"><span class="task-panel-icon">🗑️</span>Koš</button>
+                <button data-app="controlPanelWindow"><span class="task-panel-icon">⚙️</span>Ovládací panely</button>
+              </div>
+            </div>
+            <div class="xp-task-panel xp-details-panel">
+              <div class="xp-task-panel-title">Podrobnosti <button class="panel-collapse" type="button" aria-label="Sbalit">⌃</button></div>
+              <div class="xp-task-panel-body"><strong id="explorerDetailsTitle">Tento počítač</strong><span id="explorerDetailsText">Systémová složka</span></div>
+            </div>
+          </aside>
+          <div class="computer-files explorer-icons-view" id="computerFiles">
+            <section class="explorer-group" data-search-text="soubory uložené dokumenty">
+              <h3>Soubory uložené v tomto počítači</h3>
+              <div class="explorer-items">
+                <button class="explorer-item folder-item explorer-nav" data-explorer-target="shared"><span class="explorer-item-icon folder-xp-icon"></span><span>Sdílené dokumenty</span></button>
+                <button class="explorer-item folder-item explorer-nav" data-explorer-target="documents"><span class="explorer-item-icon folder-xp-icon"></span><span>Hanz dokumenty</span></button>
+              </div>
+            </section>
+            <section class="explorer-group" data-search-text="jednotky pevných disků místní disk">
+              <h3>Jednotky pevných disků</h3>
+              <div class="explorer-items">
+                <button class="explorer-item drive-item" data-drive="c"><span class="explorer-item-icon drive-xp-icon"></span><span>Místní disk (C:)</span></button>
+                <button class="explorer-item drive-item" data-drive="h"><span class="explorer-item-icon drive-xp-icon"></span><span>Hanz Garage (H:)</span></button>
+              </div>
+            </section>
+            <section class="explorer-group" data-search-text="skenery fotoaparáty kamera">
+              <h3>Skenery a fotoaparáty</h3>
+              <div class="explorer-items"><button class="explorer-item camera-item"><span class="explorer-item-icon camera-xp-icon">📷</span><span>Hanz Garage Camera</span></button></div>
+            </section>
+          </div>
+        </div>
+        <div class="xp-statusbar"><span id="explorerStatus">5 objektů</span><span>Hanz Garage XP</span></div>
+      </section>
+
+      <section class="xp-window task-manager-window" id="taskManagerWindow" data-title="Správce úloh systému Windows" data-icon="./assets/taskmgr-icon-norm.png" data-width="590" data-height="520" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/taskmgr-icon-norm.png" alt="" />Správce úloh systému Windows</div>
+          <div class="xp-window-controls">
+            <button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button>
+            <button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button>
+            <button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button>
+          </div>
+        </div>
+        <div class="xp-menubar taskmgr-menubar">
+          <button data-task-menu="file">Soubor</button>
+          <button data-task-menu="options">Možnosti</button>
+          <button data-task-menu="view">Zobrazit</button>
+          <button data-task-menu="windows">Okna</button>
+          <button data-task-menu="shutdown">Vypnout</button>
+          <button data-task-menu="help">Nápověda</button>
+        </div>
+        <div class="taskmgr-menu-popup" id="taskMgrMenuPopup" aria-hidden="true"></div>
+        <div class="taskmgr-tabs">
+          <button class="is-active" data-task-tab="apps">Aplikace</button>
+          <button data-task-tab="processes">Procesy</button>
+          <button data-task-tab="performance">Výkon</button>
+          <button data-task-tab="network">Sítě</button>
+          <button data-task-tab="users">Uživatelé</button>
+        </div>
+        <div class="taskmgr-panel is-active" id="taskMgrAppsPanel" data-task-panel="apps">
+          <div class="taskmgr-table-wrap taskmgr-apps-wrap">
+            <div class="taskmgr-table-header taskmgr-app-header"><span></span><span>Úloha</span><span>Stav</span></div>
+            <div class="taskmgr-list" id="taskMgrList" role="listbox" aria-label="Spuštěné aplikace"></div>
+          </div>
+          <div class="taskmgr-actions"><button id="taskMgrEnd" type="button">Ukončit úlohu</button><button id="taskMgrSwitch" type="button">Přepnout</button><button id="taskMgrNew" type="button">Nová úloha…</button></div>
+        </div>
+        <div class="taskmgr-panel" id="taskMgrProcessesPanel" data-task-panel="processes">
+          <div class="taskmgr-process-toolbar"><label><input id="taskMgrShowAll" type="checkbox" /> Zobrazit procesy všech uživatelů</label><button id="taskMgrRefreshProcesses" type="button">Aktualizovat</button></div>
+          <div class="taskmgr-table-wrap">
+            <div class="taskmgr-table-header taskmgr-process-header"><button data-process-sort="name">Název procesu</button><button data-process-sort="user">Uživatelské jméno</button><button data-process-sort="cpu">CPU</button><button data-process-sort="memory">Využití paměti</button></div>
+            <div class="taskmgr-process-list" id="taskMgrProcessList" role="listbox" aria-label="Procesy"></div>
+          </div>
+          <div class="taskmgr-actions"><button id="taskMgrEndProcess" type="button">Ukončit proces</button></div>
+        </div>
+        <div class="taskmgr-panel" id="taskMgrPerformancePanel" data-task-panel="performance">
+          <div class="taskmgr-performance-xp">
+            <div class="taskmgr-perf-left">
+              <div class="taskmgr-mini-box"><strong>Využití CPU</strong><canvas id="taskCpuGauge" width="100" height="72"></canvas><span id="taskCpuText">0 %</span></div>
+              <div class="taskmgr-mini-box"><strong>Stránkovací soubor</strong><canvas id="taskPageGauge" width="100" height="72"></canvas><span id="taskMemText">0 MB</span></div>
+            </div>
+            <div class="taskmgr-perf-main">
+              <strong>Historie využití CPU</strong><canvas id="taskMgrGraph" width="430" height="126"></canvas>
+              <strong>Historie využití stránkovacího souboru</strong><canvas id="taskMgrMemGraph" width="430" height="126"></canvas>
+            </div>
+            <div class="taskmgr-stats-grid">
+              <fieldset><legend>Celkem</legend><span>Popisovače <b id="taskHandles">10880</b></span><span>Podprocesy <b id="taskThreads">524</b></span><span>Procesy <b id="taskProcessCount">0</b></span></fieldset>
+              <fieldset><legend>Fyzická paměť (MB)</legend><span>Celkem <b>4096</b></span><span>K dispozici <b id="taskAvailableMem">3072</b></span><span>Mezipaměť systému <b id="taskCacheMem">1024</b></span></fieldset>
+              <fieldset><legend>Využití paměti (MB)</legend><span>Celkem <b id="taskCommitTotal">1024</b></span><span>Mez <b>8192</b></span><span>Špička <b id="taskCommitPeak">1200</b></span></fieldset>
+              <fieldset><legend>Paměť jádra (MB)</legend><span>Celkem <b>186</b></span><span>Stránkováno <b>84</b></span><span>Nestránkováno <b>102</b></span></fieldset>
+            </div>
+          </div>
+        </div>
+        <div class="taskmgr-panel" id="taskMgrNetworkPanel" data-task-panel="network">
+          <div class="taskmgr-network-head"><span>Adaptér</span><strong>Hanz Ethernet</strong><span>Rychlost spojení:</span><strong>1,0 Gb/s</strong></div>
+          <canvas id="taskMgrNetworkGraph" width="500" height="230"></canvas>
+          <div class="taskmgr-network-stats"><span>Využití sítě: <b id="taskNetworkUse">0,0 %</b></span><span>Stav: <b>Připojeno</b></span><span>Odesláno: <b id="taskNetworkSent">0 KB</b></span><span>Přijato: <b id="taskNetworkReceived">0 KB</b></span></div>
+        </div>
+        <div class="taskmgr-panel" id="taskMgrUsersPanel" data-task-panel="users">
+          <div class="taskmgr-table-wrap">
+            <div class="taskmgr-table-header taskmgr-user-header"><span>Uživatel</span><span>ID</span><span>Stav</span><span>Název klienta</span></div>
+            <div class="taskmgr-user-list" id="taskMgrUserList" role="listbox">
+              <button type="button" class="taskmgr-user-row is-selected" data-user="Hanz"><span><i class="taskmgr-user-icon"></i>Hanz</span><span>0</span><span>Aktivní</span><span>Console</span></button>
+              <button type="button" class="taskmgr-user-row" data-user="Guest"><span><i class="taskmgr-user-icon guest"></i>Guest</span><span>1</span><span>Odpojeno</span><span></span></button>
+            </div>
+          </div>
+          <div class="taskmgr-actions taskmgr-user-actions"><button id="taskMgrDisconnectUser" type="button">Odpojit</button><button id="taskMgrLogoffUser" type="button">Odhlásit</button><button id="taskMgrMessageUser" type="button">Odeslat zprávu…</button></div>
+        </div>
+        <div class="taskmgr-statusbar"><span id="taskMgrStatus">Procesy: 0</span><span id="taskMgrCpuStatus">Využití CPU: 0 %</span><span id="taskMgrMemStatus">Využití paměti: 0 MB / 4096 MB</span></div>
+      </section>
+
+      <section class="xp-window run-dialog-window" id="runDialogWindow" data-title="Spustit" data-width="390" data-height="190" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title">Spustit</div>
+          <div class="xp-window-controls"><button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button></div>
+        </div>
+        <div class="run-dialog-body"><div class="run-icon">▶</div><p>Zadejte název programu, složky, dokumentu nebo internetového prostředku.</p><label>Otevřít: <input id="runCommand" type="text" autocomplete="off" /></label><div class="run-dialog-actions"><button id="runOk" type="button">OK</button><button id="runCancel" type="button">Storno</button><button id="runBrowse" type="button">Procházet…</button></div><div class="run-suggestions">Tip: <code>sol</code>, <code>winmine</code>, <code>mspaint</code>, <code>notepad</code>, <code>calc</code>, <code>wmplayer</code>, <code>taskmgr</code>, <code>cmd</code>, <code>iexplore</code>, <code>radio</code>, <code>hanzcenter</code>, <code>screensaver</code>, <code>soundrec</code>, <code>documents</code>, <code>had</code></div></div>
+      </section>
+
+      <section class="xp-window media-player-window wmp-custom-skin" id="mediaPlayerWindow" data-title="Windows Media Player" data-icon="./assets/wmp-icon-norm.png" data-width="346" data-height="344" aria-hidden="true">
+        <div class="wmp-skin-stage theme-1" id="wmpSkinStage">
+          <img id="wmpSkinArt" class="wmp-skin-art" src="./assets/wmp-skin-1-interactive.png" alt="Windows Media Player skin" draggable="false" />
+          <img id="wmpCoverArt" class="wmp-cover-art" src="./assets/nachtfahrer-cover-user.png" alt="Nachtfahrer cover" draggable="false" />
+          <div class="wmp-drag-zone" data-drag-handle aria-hidden="true"></div>
+          <canvas id="wmpVisualizer" class="wmp-visualizer" width="480" height="260" aria-hidden="true"></canvas>
+          <div class="wmp-overlay-state" id="wmpStateText">Stopped</div>
+          <div class="wmp-overlay-time"><span id="wmpCurrentTime">0:00</span><span id="wmpDuration">0:00</span></div>
+          <input id="wmpSeek" class="wmp-hot-range wmp-seek" type="range" min="0" max="1000" value="0" aria-label="Pozice skladby" />
+          <input id="wmpVolume" class="wmp-hot-range wmp-volume" type="range" min="0" max="100" value="80" aria-label="Hlasitost" />
+          <span class="wmp-status-light" id="wmpStatusLight"></span>
+          <span class="wmp-track-title" id="wmpTrackTitle">Nachtfahrer</span>
+          <button type="button" class="wmp-hotspot wmp-back" id="wmpBackButton" aria-label="Zpět o 10 sekund"></button>
+          <button type="button" class="wmp-hotspot wmp-play" id="wmpPlayButton" aria-label="Přehrát nebo pozastavit"></button>
+          <button type="button" class="wmp-hotspot wmp-stop" id="wmpStopButton" aria-label="Stop"></button>
+          <button type="button" class="wmp-hotspot wmp-forward" id="wmpForwardButton" aria-label="Vpřed o 10 sekund"></button>
+          <button type="button" class="wmp-hotspot wmp-mute" id="wmpMuteButton" aria-label="Ztlumit"></button>
+          <button type="button" class="wmp-hotspot wmp-pause" id="wmpPauseButton" aria-label="Pozastavit"></button>
+          <button type="button" class="wmp-hotspot wmp-eject" id="wmpEjectButton" aria-label="Otevřít hudbu"></button>
+          <button type="button" class="wmp-hotspot wmp-side-back" id="wmpSideBackButton" aria-label="Zpět o 10 sekund"></button>
+          <button type="button" class="wmp-hotspot wmp-side-forward" id="wmpSideForwardButton" aria-label="Vpřed o 10 sekund"></button>
+          <button type="button" class="wmp-hotspot wmp-minimize" data-window-action="minimize" aria-label="Minimalizovat"></button>
+          <button type="button" class="wmp-hotspot wmp-maximize" data-window-action="maximize" aria-label="Maximalizovat"></button>
+          <button type="button" class="wmp-hotspot wmp-close" data-window-action="close" aria-label="Zavřít"></button>
+          <button type="button" class="wmp-theme-button" id="wmpThemeButton">Motivy</button>
+          <button type="button" class="wmp-library-button" id="wmpLibraryButton">Seznam</button>
+          <div class="wmp-theme-menu" id="wmpThemeMenu" hidden>
+            <strong>Vyber motiv</strong>
+            <div class="wmp-theme-grid">
+              <button type="button" data-wmp-theme="1"><img src="./assets/wmp-skin-1.png" alt="Motiv 1"><span>1</span></button>
+              <button type="button" data-wmp-theme="2"><img src="./assets/wmp-skin-2.png" alt="Motiv 2"><span>2</span></button>
+              <button type="button" data-wmp-theme="3"><img src="./assets/wmp-skin-3.png" alt="Motiv 3"><span>3</span></button>
+              <button type="button" data-wmp-theme="4"><img src="./assets/wmp-skin-4.png" alt="Motiv 4"><span>4</span></button>
+              <button type="button" data-wmp-theme="5"><img src="./assets/wmp-skin-5.png" alt="Motiv 5"><span>5</span></button>
+              <button type="button" data-wmp-theme="6"><img src="./assets/wmp-skin-6.png" alt="Motiv 6"><span>6</span></button>
+            </div>
+          </div>
+          <div class="wmp-library-panel" id="wmpLibraryPanel" hidden>
+            <strong>Windows Media Player</strong>
+            <div class="wmp-library-section-label">Knihovna</div>
+            <button type="button" class="wmp-track-row is-current" id="wmpBuiltInTrack">▶ Nachtfahrer.mp3</button>
+            <div class="wmp-library-section-label wmp-online-label">Online rádio</div>
+            <button type="button" class="wmp-track-row wmp-radio-row" id="wmpRadioKiss">
+              <span>📻 Rádio KISS</span><span class="wmp-live-badge">LIVE</span>
+            </button>
+            <div class="wmp-radio-tools" id="wmpRadioTools" hidden>
+              <div class="wmp-radio-status-line"><span class="wmp-radio-pulse" aria-hidden="true"></span><span id="wmpRadioStatus">Připraveno k připojení</span></div>
+              <div class="wmp-radio-tool-actions">
+                <button type="button" id="wmpReconnectButton">Obnovit stream</button>
+                <a href="https://www.kiss.cz/online/" target="_blank" rel="noopener noreferrer">Web KISS</a>
+              </div>
+            </div>
+            <div class="wmp-library-actions">
+              <button type="button" id="wmpFileButton">Přidat hudbu…</button>
+              <button type="button" id="wmpLoopButton">Opakovat</button>
+              <button type="button" id="wmpSoundModeButton">Sound Mod: OFF</button>
+              <button type="button" id="wmpSleepButton">Časovač: OFF</button>
+              <button type="button" id="wmpVizModeButton" class="is-enabled">Vizualizér: Sloupce</button>
+              <button type="button" id="wmpCoverButton" class="is-enabled">Cover: ON</button>
+              <button type="button" id="wmpHelpButton">Nápověda</button>
+              <button type="button" id="wmpPlayMenuButton">Play/Pause</button>
+            </div>
+            <div class="wmp-now-file"><span id="wmpBitrate">Nachtfahrer.mp3</span><span id="wmpSoundBadge">Stereo</span></div>
+          </div>
+          <input id="wmpFileInput" type="file" accept="audio/*" multiple hidden />
+        </div>
+        <audio id="nachtfahrerAudio" preload="auto" playsinline src="./assets/Nachtfahrer.mp3"></audio>
+      </section>
+
+      <section class="xp-window cmd-window" id="cmdWindow" data-title="Příkazový řádek" data-icon="./assets/cmd-icon-norm.png" data-width="700" data-height="430" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/cmd-icon-norm.png" alt="" />Příkazový řádek</div>
+          <div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button><button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button><button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button></div>
+        </div>
+        <div class="cmd-console" id="cmdConsole" tabindex="0" aria-label="Příkazový řádek">
+          <pre id="cmdOutput">Microsoft Windows XP [Verze 5.1.2600]
+(C) Copyright 1985-2001 Microsoft Corp.
+
+</pre>
+          <div class="cmd-entry"><span id="cmdPrompt">C:\Documents and Settings\Hanz&gt;</span><input id="cmdInput" type="text" autocomplete="off" spellcheck="false" aria-label="Příkaz" /></div>
+        </div>
+      </section>
+
+      <section class="xp-window ie-window" id="internetExplorerWindow" data-title="Internet Explorer" data-icon="./assets/ie-icon-norm.png" data-width="860" data-height="620" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/ie-icon-norm.png" alt="" /><span id="ieWindowTitle">Internet Explorer</span></div>
+          <div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize" aria-label="Minimalizovat">_</button><button class="xp-control xp-maximize" data-window-action="maximize" aria-label="Maximalizovat">□</button><button class="xp-control xp-close" data-window-action="close" aria-label="Zavřít">×</button></div>
+        </div>
+        <div class="xp-menubar ie-menubar"><button>Soubor</button><button>Úpravy</button><button>Zobrazit</button><button>Oblíbené</button><button>Nástroje</button><button id="ieHelp">Nápověda</button></div>
+        <div class="ie-toolbar">
+          <button id="ieBack" type="button">◀ <span>Zpět</span></button><button id="ieForward" type="button">▶</button><button id="ieStop" type="button">✕</button><button id="ieRefresh" type="button">↻</button><button id="ieHome" type="button">⌂ <span>Domů</span></button><button id="ieSearch" type="button">🔍 <span>Hledat</span></button><button id="ieFavorites" type="button">★ <span>Oblíbené</span></button>
+        </div>
+        <div class="ie-address"><span>Adresa</span><img src="./assets/ie-icon-norm.png" alt="" /><input id="ieAddress" type="text" value="hanz://domu" spellcheck="false" /><button id="ieGo" type="button">Přejít</button></div>
+        <div class="ie-page" id="iePage">
+          <div class="ie-home-page" id="ieHomePage"><div class="ie-brand"><img src="./assets/ie-icon-norm.png" alt="" /><div><strong>Internet Explorer</strong><span>Hanz Garage Edition</span></div></div><h2>Vítejte na Internetu</h2><p>Zadej adresu nahoře nebo použij oblíbené odkazy.</p><div class="ie-favorites-grid"><button data-ie-url="https://www.instagram.com/hanz.mrdke">Hanz</button><button data-ie-url="https://www.instagram.com/nachtfahrerpodcast/">Nachtfahrer Podcast</button><button data-ie-url="https://www.youtube.com/@Nachtfahrer_podcast">YouTube</button><button data-ie-url="https://herohero.co/nachtfahrer">HeroHero</button><button data-ie-url="https://www.patreon.com/Nachtfahrer">Patreon</button></div></div>
+          <div class="ie-external-page ie-endless-loading" id="ieExternalPage" hidden><div class="ie-loading-bar"><i></i></div><div class="ie-spinner-orbit" aria-hidden="true"><span></span></div><h3 id="ieExternalTitle">Načítání stránky…</h3><p id="ieExternalUrl"></p><p class="ie-loading-detail" id="ieLoadingDetail">Čekání na odpověď serveru…</p><button id="ieOpenExternal" type="button" hidden>Otevřít stránku</button></div>
+        </div>
+        <div class="xp-statusbar"><span id="ieStatus">Hotovo</span><span>Internet</span></div>
+      </section>
+
+      <section class="xp-window control-panel-window" id="controlPanelWindow" data-title="Ovládací panely" data-icon="./assets/computer-icon-norm.png" data-width="720" data-height="520" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle><div class="xp-window-title"><img src="./assets/computer-icon-norm.png" alt="" />Ovládací panely</div><div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div></div>
+        <div class="xp-menubar cp-menubar"><button>Soubor</button><button>Úpravy</button><button>Zobrazit</button><button>Oblíbené</button><button>Nástroje</button><button>Nápověda</button><span class="cp-win-mark">⊞</span></div>
+        <div class="cp-toolbar">
+          <button class="cp-nav is-disabled" type="button"><span class="cp-round cp-back">‹</span><span>Zpět</span><small>▼</small></button>
+          <button class="cp-nav" type="button"><span class="cp-round cp-forward">›</span></button>
+          <button class="cp-toolbar-icon" type="button" title="Nahoru">📁↗</button>
+          <span class="cp-separator"></span>
+          <button class="cp-toolbar-wide" type="button" data-app="searchWindow"><span>🔎</span>Hledat</button>
+          <button class="cp-toolbar-wide" type="button"><span>📂</span>Složky</button>
+          <span class="cp-separator"></span>
+          <button class="cp-toolbar-icon cp-view" type="button" title="Zobrazení">▦<small>▼</small></button>
+        </div>
+        <div class="cp-addressbar"><span>Adresa</span><div class="cp-address-field"><img src="./assets/cp-icons/control-panel.png" alt="" /><strong>Ovládací panely</strong><span class="cp-address-drop">▼</span></div><button class="cp-go" type="button"><span>➜</span>Přejít</button></div>
+        <div class="control-panel-body cp-category-view">
+          <aside class="cp-task-pane">
+            <div class="cp-task-box">
+              <div class="cp-task-title"><img src="./assets/cp-icons/control-panel.png" alt="" /><strong>Ovládací panely</strong><button type="button">⌃</button></div>
+              <button class="cp-link" type="button" id="cpClassicView"><span>🗂️</span>Přepnout do klasického<br />zobrazení</button>
+            </div>
+            <div class="cp-task-box cp-other-links">
+              <div class="cp-task-title"><strong>Další odkazy</strong><button type="button">⌃</button></div>
+              <button class="cp-link" id="cpWindowsUpdate" type="button"><span>🌐</span>Windows Update</button>
+              <button class="cp-link" id="cpHelpCenter" type="button"><span>❔</span>Nápověda a odborná pomoc</button>
+              <button class="cp-link" id="cpMoreOptions" type="button"><span>⚙️</span>Další možnosti ovládacích panelů</button>
+            </div>
+          </aside>
+          <main class="cp-category-main">
+            <h2>Vyberte kategorii úkolů</h2>
+            <div class="cp-category-grid">
+              <button class="cp-category" type="button" data-app="displayPropertiesWindow"><img src="./assets/cp-icons/appearance.png" alt="" /><span>Vzhled a motivy</span></button>
+              <button class="cp-category" type="button" id="cpPrinters"><img src="./assets/cp-icons/printer.png" alt="" /><span>Tiskárny a jiný hardware</span></button>
+              <button class="cp-category" type="button" data-app="internetExplorerWindow"><img src="./assets/cp-icons/network.png" alt="" /><span>Připojení k síti a<br />Internetu</span></button>
+              <button class="cp-category" type="button" id="cpUsers"><img src="./assets/cp-icons/users.png" alt="" /><span>Uživatelské účty</span></button>
+              <button class="cp-category" type="button" id="cpPrograms"><img src="./assets/cp-icons/programs.png" alt="" /><span>Přidat nebo odebrat<br />programy</span></button>
+              <button class="cp-category" type="button" id="cpRegional"><img src="./assets/cp-icons/regional.png" alt="" /><span>Možnosti data, času,<br />místního nastavení a<br />jazyka</span></button>
+              <button class="cp-category" type="button" id="cpSounds"><img src="./assets/cp-icons/sounds.png" alt="" /><span>Zvuky a zařízení pro práci<br />se zvukem a řečí</span></button>
+              <button class="cp-category" type="button" id="cpAccessibility"><img src="./assets/cp-icons/accessibility.png" alt="" /><span>Možnosti usnadnění</span></button>
+              <button class="cp-category" type="button" id="cpPerformance"><img src="./assets/cp-icons/performance.png" alt="" /><span>Výkon a údržba</span></button>
+              <button class="cp-category" type="button" id="cpSecurity"><img src="./assets/cp-icons/security.png" alt="" /><span>Centrum zabezpečení</span></button>
+            </div>
+          </main>
+          <div class="cp-settings-popover" id="cpSettingsPopover" hidden>
+            <div class="cp-settings-title"><strong>Další možnosti ovládacích panelů</strong><button type="button" id="cpSettingsClose">×</button></div>
+            <div class="cp-settings-content">
+              <label><span>Hlasitost systému</span><input id="cpVolume" type="range" min="0" max="100" value="80" /></label>
+              <label><span>Velikost ikon</span><select id="cpIconSize"><option value="small">Malé</option><option value="normal" selected>Normální</option><option value="large">Velké</option></select></label>
+              <label><span>Jas pozadí</span><input id="cpBrightness" type="range" min="65" max="115" value="100" /></label>
+              <button id="cpResetWindows" type="button">Vrátit okna doprostřed</button>
+              <button id="cpPlayStartup" type="button">Přehrát zvuk spuštění</button>
+              <button type="button" data-app="systemPropertiesWindow">Vlastnosti systému</button>
+              <button type="button" data-app="recycleBinWindow">Koš</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="xp-window recycle-bin-window" id="recycleBinWindow" data-title="Koš" data-icon="./assets/recycle-bin-xp.png" data-width="650" data-height="470" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle><div class="xp-window-title"><img src="./assets/recycle-bin-xp.png" alt="" />Koš</div><div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div></div>
+        <div class="xp-menubar"><button id="recycleFileMenu">Soubor</button><button id="recycleEditMenu">Úpravy</button><button id="recycleViewMenu">Zobrazit</button><button id="recycleHelpMenu">Nápověda</button></div>
+        <div class="recycle-toolbar">
+          <button id="recycleRestore" type="button">↩ Obnovit vybrané</button>
+          <button id="recycleRestoreAll" type="button">↶ Obnovit vše</button>
+          <button id="recycleDeletePermanent" type="button">✖ Odstranit trvale</button>
+          <button id="recycleEmpty" type="button">🗑 Vyprázdnit koš</button>
+        </div>
+        <div class="recycle-layout"><aside class="recycle-sidebar"><h3>Úlohy Koše</h3><button id="recycleRestoreSide" type="button">Obnovit vybrané položky</button><button id="recycleRestoreAllSide" type="button">Obnovit všechny položky</button><button id="recycleDeletePermanentSide" type="button">Odstranit vybrané trvale</button><button id="recycleEmptySide" type="button">Vyprázdnit Koš</button><h3>Výběr</h3><button id="recycleSelectAll" type="button">Vybrat vše</button><button id="recycleClearSelection" type="button">Zrušit výběr</button><h3>Jiná místa</h3><button type="button" data-app="computerWindow">Tento počítač</button><button type="button" data-app="notepadWindow">Dokumenty</button></aside><div class="recycle-main"><div class="recycle-drop-note" id="recycleDropNote">Přetáhni ikony z plochy přímo na Koš.</div><div class="recycle-header"><span>Název</span><span>Původní umístění</span><span>Datum odstranění</span></div><div class="recycle-list" id="recycleList" role="listbox" aria-multiselectable="true" tabindex="0"></div><div class="recycle-empty-state" id="recycleEmptyState" hidden>Koš je prázdný.<small>Přetáhni sem ikonu z plochy.</small></div></div></div>
+        <div class="xp-statusbar"><span id="recycleStatus">0 objektů</span><span id="recycleSelectionStatus">0 vybráno</span></div>
+      </section>
+
+      <section class="xp-window display-properties-window" id="displayPropertiesWindow" data-title="Zobrazení – vlastnosti" data-icon="./assets/display-icon.svg" data-width="560" data-height="510" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle><div class="xp-window-title"><img src="./assets/display-icon.svg" alt="" />Zobrazení – vlastnosti</div><div class="xp-window-controls"><button class="xp-control xp-close" data-window-action="close">×</button></div></div>
+        <div class="display-tabs"><button data-display-tab="themes">Motivy</button><button class="is-active" data-display-tab="desktop">Plocha</button><button data-display-tab="screensaver">Spořič obrazovky</button><button data-display-tab="appearance">Vzhled</button></div>
+        <div class="display-panel" data-display-panel="themes"><fieldset><legend>Motiv</legend><select id="displayThemeSelect"><option value="luna" selected>Windows XP</option><option value="classic">Klasický Windows</option><option value="hanz">Hanz Garage XP</option></select><div class="theme-preview"><div class="theme-preview-title">Aktivní okno</div><div class="theme-preview-body">Ukázka motivu</div></div></fieldset></div>
+        <div class="display-panel is-active" data-display-panel="desktop"><div class="display-monitor"><div class="display-monitor-screen" id="desktopPreview"></div><div class="display-monitor-stand"></div></div><label>Pozadí: <select id="wallpaperSelect"><option value="bliss">Bliss</option><option value="blue">Windows XP Blue</option><option value="black">Černá</option><option value="green">Hanz Green</option></select></label><div class="wallpaper-upload-row"><span>Vlastní obrázek:</span><button id="wallpaperUploadButton" type="button">Procházet…</button><button id="wallpaperRemoveButton" type="button" hidden>Odebrat</button><input id="wallpaperUploadInput" type="file" accept="image/*" hidden /><span class="wallpaper-file-name" id="wallpaperFileName">Není vybrán žádný soubor.</span></div><label>Pozice: <select id="wallpaperPosition"><option value="cover">Roztáhnout</option><option value="contain">Na střed</option><option value="repeat">Dlaždice</option></select></label></div>
+        <div class="display-panel" data-display-panel="screensaver"><div class="screensaver-preview"><div class="screensaver-mini"><img src="./assets/hanz-garage-logo.png" alt="" /></div></div><label>Spořič obrazovky: <select id="screenSaverSelect"><option value="hanz">Hanz Garage – DVD</option><option value="stars">Hvězdné pole</option><option value="none">Žádný</option></select></label><div class="screensaver-extra"><label>Rychlost DVD: <select id="screenSaverSpeed"><option value="slow">Pomalá</option><option value="classic" selected>Klasická</option><option value="fast">Rychlá</option></select></label><label class="screensaver-check"><input id="screenSaverColorShift" type="checkbox" checked /> Změnit barvu po odrazu</label></div><div class="screensaver-controls"><button id="screenSaverPreview" type="button">Náhled</button><label>Čekat: <input id="screenSaverMinutes" type="number" min="1" max="30" value="3" /> min</label></div></div>
+        <div class="display-panel" data-display-panel="appearance"><fieldset><legend>Okna a tlačítka</legend><select id="appearanceSelect"><option value="blue">Windows XP style – Modrá</option><option value="olive">Windows XP style – Olivová</option><option value="silver">Windows XP style – Stříbrná</option></select></fieldset><label><input id="showDesktopIcons" type="checkbox" checked /> Zobrazit ikony na ploše</label></div>
+        <div class="dialog-buttons"><button id="displayOk" type="button">OK</button><button id="displayCancel" type="button">Storno</button><button id="displayApply" type="button">Použít</button></div>
+      </section>
+
+      <section class="xp-window system-properties-window" id="systemPropertiesWindow" data-title="Vlastnosti systému" data-icon="./assets/system-icon.svg" data-width="570" data-height="490" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle><div class="xp-window-title"><img src="./assets/system-icon.svg" alt="" />Vlastnosti systému</div><div class="xp-window-controls"><button class="xp-control xp-close" data-window-action="close">×</button></div></div>
+        <div class="system-tabs"><button class="is-active" data-system-tab="general">Obecné</button><button data-system-tab="computerName">Název počítače</button><button data-system-tab="hardware">Hardware</button><button data-system-tab="advanced">Upřesnit</button></div>
+        <div class="system-panel is-active" data-system-panel="general"><div class="system-general-brand"><img src="./assets/hanz-garage-logo.png" alt="Hanz Garage" /><div><strong>Hanz Garage XP</strong><span>Professional Edition</span><span>Service Pack HG</span></div></div><hr><p>Registrováno na:</p><strong>Hanz</strong><p>Počítač:</p><div class="system-specs"><span>Hanz Garage Virtual PC</span><span id="systemBrowserInfo">Webový prohlížeč</span><span id="systemMemoryInfo">4096 MB RAM</span></div></div>
+        <div class="system-panel" data-system-panel="computerName"><p>Úplný název počítače:</p><strong id="computerNameValue">HANZ-GARAGE</strong><label>Popis počítače: <input id="computerDescription" type="text" value="Hanz Garage XP workstation" /></label><button id="renameComputer" type="button">Změnit…</button></div>
+        <div class="system-panel" data-system-panel="hardware"><div class="hardware-row"><strong>Správce zařízení</strong><span>Zobrazení a správa zařízení.</span><button id="deviceManagerButton" type="button">Správce zařízení</button></div><div class="hardware-row"><strong>Profily hardwaru</strong><span>Konfigurace hardwaru používaná tímto počítačem.</span><button id="hardwareProfilesButton" type="button">Profily hardwaru</button></div></div>
+        <div class="system-panel" data-system-panel="advanced"><div class="hardware-row"><strong>Výkon</strong><span>Vizuální efekty a využití paměti.</span><button id="performanceSettingsButton" type="button">Nastavení…</button></div><div class="hardware-row"><strong>Spuštění a zotavení systému</strong><span>Chování systému při spuštění.</span><button id="startupRecoveryButton" type="button">Nastavení…</button></div></div>
+        <div class="dialog-buttons"><button id="systemOk" type="button">OK</button><button id="systemCancel" type="button">Storno</button><button id="systemApply" type="button">Použít</button></div>
+      </section>
+
+      <section class="xp-window hanz-center-window" id="hanzCenterWindow" data-title="Hanz Garage Centrum" data-icon="./assets/hanz-center-icon.png" data-width="610" data-height="470" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle><div class="xp-window-title"><img src="./assets/hanz-center-icon.png" alt="" />Hanz Garage Centrum</div><div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div></div>
+        <div class="hanz-center-body">
+          <header class="hanz-center-hero"><img src="./assets/hanz-garage-logo.png" alt="Hanz Garage" /><div><h2>Hanz Garage XP Centrum</h2><p>Rychlé ovládání systému, médií a plochy na jednom místě.</p></div></header>
+          <div class="hanz-center-status">
+            <div><span>Systém</span><strong id="centerUptime">0:00</strong><small>doba relace</small></div>
+            <div><span>Programy</span><strong id="centerOpenApps">0</strong><small>otevřeno</small></div>
+            <div><span>Síť</span><strong id="centerNetwork">ONLINE</strong><small>stav připojení</small></div>
+            <div><span>Média</span><strong id="centerMedia">Nachtfahrer</strong><small id="centerMediaState">zastaveno</small></div>
+          </div>
+          <div class="hanz-center-actions">
+            <button id="centerOpenWmp" type="button">▶ Otevřít Media Player</button>
+            <button id="centerPlayPause" type="button">⏯ Play / Pause</button>
+            <button id="centerRadio" type="button">📻 Rádio KISS</button>
+            <button id="centerScreensaver" type="button">▣ Spustit DVD spořič</button>
+            <button id="centerDisplay" type="button">🖼 Zobrazení a wallpaper</button>
+            <button id="centerTaskmgr" type="button">▥ Správce úloh</button>
+            <button id="centerShowDesktop" type="button">▣ Zobrazit plochu</button>
+            <button id="centerArrange" type="button">▦ Srovnat ikony</button>
+            <button id="centerMute" type="button">🔊 Ztlumit systém</button>
+            <button data-app="soundRecorderWindow" type="button">🔊 Záznam zvuku</button>
+            <button data-app="documentsWindow" type="button">📁 Moje dokumenty</button>
+            <button data-app="snakeWindow" type="button">🐍 Had</button>
+          </div>
+          <div class="hanz-center-shortcuts"><strong>Klávesy:</strong> Ctrl+Alt+M = Media Player · Ctrl+Alt+K = Rádio KISS · Ctrl+Alt+H = Centrum · Win/Ctrl+Alt+D = plocha · F5 = aktualizovat plochu</div>
+        </div>
+        <div class="xp-statusbar"><span>Hanz Garage XP</span><span id="centerClock">00:00:00</span></div>
+      </section>
+
+      <section class="xp-window search-window" id="searchWindow" data-title="Hledat" data-icon="./assets/computer-icon-norm.png" data-width="560" data-height="420" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle><div class="xp-window-title">🔍 Hledat</div><div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div></div>
+        <div class="search-body"><div class="search-assistant">🐶</div><div class="search-panel"><h3>Co chcete vyhledat?</h3><input id="xpSearchInput" type="search" placeholder="Název programu nebo odkazu" /><button id="xpSearchButton" type="button">Hledat</button><div id="xpSearchResults" class="search-results"></div></div></div>
+      </section>
+
+
+      <section class="xp-window archive-window" id="archiveWindow" data-title="Archiv" data-icon="./assets/archive-folder-icon.png" data-width="820" data-height="570" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/archive-folder-icon.png" alt="" />Archiv</div>
+          <div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div>
+        </div>
+        <div class="archive-menubar"><button type="button">Soubor</button><button type="button">Úpravy</button><button type="button">Zobrazit</button><button type="button">Oblíbené</button><button type="button">Nástroje</button><button type="button">Nápověda</button></div>
+        <div class="archive-toolbar"><button type="button" id="archiveBack">← Zpět</button><button type="button" id="archiveUp">↑ Nahoru</button><button type="button" id="archiveSearch">🔍 Hledat</button><span class="archive-address-label">Adresa</span><div class="archive-address"><img src="./assets/archive-folder-icon.png" alt="" />C:\Documents and Settings\Hanz\Plocha\Archiv</div></div>
+        <div class="archive-layout">
+          <aside class="archive-sidebar">
+            <div class="archive-side-box"><strong>Úlohy se soubory a složkami</strong><button type="button" id="archiveOpenPaint">🎨 Otevřít vybraný obrázek v Malování</button><button type="button" id="archiveSelectAll">▦ Vybrat vše</button></div>
+            <div class="archive-side-box"><strong>Další místa</strong><button type="button" data-app="computerWindow">💻 Tento počítač</button><button type="button" data-app="documentsWindow">📁 Moje dokumenty</button></div>
+            <div class="archive-side-box archive-details"><strong>Podrobnosti</strong><span id="archiveDetails">Archiv<br>12 obrázků</span></div>
+          </aside>
+          <main class="archive-main" id="archivePhotoGrid" tabindex="0" aria-label="Obsah složky Archiv">
+            <button class="archive-photo" type="button" data-src="./assets/archive/01-hanz-fans.jpg" data-name="Hanz Fans.jpg"><span><img src="./assets/archive/01-hanz-fans.jpg" alt="" /></span><em>Hanz Fans.jpg</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/02-zastavka.png" data-name="Zastávka.png"><span><img src="./assets/archive/02-zastavka.png" alt="" /></span><em>Zastávka.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/03-nachtfahrer-family.png" data-name="Nachtfahrer Family.png"><span><img src="./assets/archive/03-nachtfahrer-family.png" alt="" /></span><em>Nachtfahrer Family.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/04-mercedes-garaz.png" data-name="Mercedes garáž.png"><span><img src="./assets/archive/04-mercedes-garaz.png" alt="" /></span><em>Mercedes garáž.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/05-mrdke-card.png" data-name="MRDKE Card.png"><span><img src="./assets/archive/05-mrdke-card.png" alt="" /></span><em>MRDKE Card.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/06-modry-outfit.png" data-name="Modrý outfit.png"><span><img src="./assets/archive/06-modry-outfit.png" alt="" /></span><em>Modrý outfit.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/07-plaz.png" data-name="Pláž.png"><span><img src="./assets/archive/07-plaz.png" alt="" /></span><em>Pláž.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/08-general.png" data-name="Generál.png"><span><img src="./assets/archive/08-general.png" alt="" /></span><em>Generál.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/09-subaru.png" data-name="Subaru.png"><span><img src="./assets/archive/09-subaru.png" alt="" /></span><em>Subaru.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/10-mercedes-dvojice.png" data-name="Mercedes dvojice.png"><span><img src="./assets/archive/10-mercedes-dvojice.png" alt="" /></span><em>Mercedes dvojice.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/11-praga.png" data-name="Praga.png"><span><img src="./assets/archive/11-praga.png" alt="" /></span><em>Praga.png</em></button>
+            <button class="archive-photo" type="button" data-src="./assets/archive/12-praga-ulice.png" data-name="Praga ulice.png"><span><img src="./assets/archive/12-praga-ulice.png" alt="" /></span><em>Praga ulice.png</em></button>
+          </main>
+        </div>
+        <div class="xp-statusbar"><span id="archiveStatus">12 objektů</span><span>Obrázek otevřeš dvojklikem v Malování</span></div>
+      </section>
+
+      <!-- Additional XP apps -->
+
+      <section class="xp-window sound-recorder-window" id="soundRecorderWindow" data-title="Záznam zvuku" data-icon="./assets/sound-recorder-icon.png" data-width="520" data-height="335" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/sound-recorder-icon.png" alt="" />Záznam zvuku</div>
+          <div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div>
+        </div>
+        <div class="recorder-menubar"><button type="button">Soubor</button><button type="button">Úpravy</button><button type="button">Nápověda</button></div>
+        <div class="recorder-body">
+          <div class="recorder-display"><div class="recorder-time" id="recorderTime">00:00.0</div><div class="recorder-level" id="recorderLevel"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span id="recorderStatus">Připraveno</span></div>
+          <div class="recorder-controls">
+            <button id="recorderRecord" class="record-button" type="button" title="Nahrávat">●</button>
+            <button id="recorderStop" type="button" title="Stop" disabled>■</button>
+            <button id="recorderPlay" type="button" title="Přehrát" disabled>▶</button>
+            <button id="recorderDownload" type="button" disabled>Uložit WAV/WebM…</button>
+            <button id="recorderClear" type="button" disabled>Vymazat</button>
+          </div>
+          <audio id="recorderAudio" controls hidden></audio>
+          <p class="recorder-hint">Při prvním nahrávání prohlížeč požádá o přístup k mikrofonu.</p>
+        </div>
+        <div class="xp-statusbar"><span>Záznam zvuku</span><span id="recorderFormat">Mikrofon</span></div>
+      </section>
+
+      <section class="xp-window documents-window" id="documentsWindow" data-title="Moje dokumenty" data-icon="./assets/computer-icon-norm.png" data-width="760" data-height="525" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/computer-icon-norm.png" alt="" />Moje dokumenty</div>
+          <div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div>
+        </div>
+        <div class="documents-nav"><button id="docsBack" type="button" disabled>← Zpět</button><button id="docsUp" type="button" disabled>↑ Nahoru</button><span>Adresa</span><div id="docsAddress">C:\Documents and Settings\Hanz\Moje dokumenty</div></div>
+        <div class="documents-layout">
+          <aside class="documents-tasks"><strong>Práce se soubory a složkami</strong><button id="docsNewFolder" type="button">📁 Vytvořit novou složku</button><button id="docsNewText" type="button">📄 Vytvořit textový dokument</button><button id="docsRename" type="button" disabled>✎ Přejmenovat</button><button id="docsDelete" type="button" disabled>✕ Odstranit</button><div></div><small>Obsah se ukládá do tohoto prohlížeče.</small></aside>
+          <main class="documents-main"><div class="documents-list-head"><span>Název</span><span>Typ</span><span>Změněno</span></div><div class="documents-list" id="documentsList"></div><div class="documents-editor" id="documentsEditor" hidden><div><strong id="documentsEditorName"></strong><button id="documentsEditorClose" type="button">×</button></div><textarea id="documentsEditorText" spellcheck="true"></textarea><button id="documentsEditorSave" type="button">Uložit změny</button></div></main>
+        </div>
+        <div class="xp-statusbar"><span id="documentsStatus">0 objektů</span><span>Místní úložiště</span></div>
+      </section>
+
+      <section class="xp-window snake-window" id="snakeWindow" data-title="Had" data-icon="./assets/snake-icon.png" data-width="560" data-height="505" aria-hidden="true">
+        <div class="xp-titlebar" data-drag-handle>
+          <div class="xp-window-title"><img src="./assets/snake-icon.png" alt="" />Had</div>
+          <div class="xp-window-controls"><button class="xp-control xp-minimize" data-window-action="minimize">_</button><button class="xp-control xp-maximize" data-window-action="maximize">□</button><button class="xp-control xp-close" data-window-action="close">×</button></div>
+        </div>
+        <div class="snake-menubar"><button id="snakeNew" type="button">Hra → Nová hra</button><button id="snakePause" type="button">Pozastavit</button><span>Skóre: <b id="snakeScore">0</b></span><span>Rekord: <b id="snakeHighScore">0</b></span></div>
+        <div class="snake-wrap"><canvas id="snakeCanvas" width="480" height="340" aria-label="Had"></canvas><div class="snake-overlay" id="snakeOverlay"><strong>Had</strong><span>Šipky nebo WASD</span><button id="snakeStart" type="button">Spustit hru</button></div></div>
+        <div class="snake-touch" aria-label="Dotykové ovládání"><button data-snake-dir="up">▲</button><div><button data-snake-dir="left">◀</button><button data-snake-dir="down">▼</button><button data-snake-dir="right">▶</button></div></div>
+        <div class="xp-statusbar"><span>Sbírej body a nenaraz do sebe.</span><span>Šipky / WASD</span></div>
+      </section>
+
+      <div class="taskbar" aria-label="Hlavní panel">
+        <button class="start-button" id="startButton" type="button" aria-expanded="false" aria-controls="startMenu"><span class="sr-only">Start</span></button>
+        <div class="quick-launch" aria-label="Rychlé spuštění">
+          <button data-app="paintWindow" title="Malování"><img src="./assets/paint-icon-norm.png" alt="" /></button>
+          <button data-app="minesweeperWindow" title="Hledání min"><img src="./assets/minesweeper-icon-norm.png" alt="" /></button>
+          <button data-app="solitaireWindow" title="Solitaire"><img src="./assets/solitaire-icon-norm.png" alt="" /></button>
+          <button data-app="mediaPlayerWindow" title="Windows Media Player"><img src="./assets/wmp-icon-norm.png" alt="" /></button>
+          <button data-app="internetExplorerWindow" title="Internet Explorer"><img src="./assets/ie-icon-norm.png" alt="" /></button>
+          <button data-app="cmdWindow" title="Příkazový řádek"><img src="./assets/cmd-icon-norm.png" alt="" /></button>
+        </div>
+        <div class="task-buttons" id="taskButtons" aria-label="Otevřené programy"></div>
+        <div class="tray" aria-label="Oznamovací oblast">
+          <button class="tray-volume-button" id="trayVolumeButton" type="button" aria-label="Hlasitost">🔊</button>
+          <button class="tray-media-button" id="trayMediaButton" type="button" aria-label="Právě hraje" title="Právě hraje">♫</button>
+          <span class="tray-reference-icons" aria-hidden="true"></span>
+          <button class="tray-clock-button" id="trayClockButton" type="button"><span id="clock">00:00</span></button>
+        </div>
+      </div>
+      <div class="tray-popup volume-popup" id="volumePopup" aria-hidden="true"><strong>Hlasitost</strong><input id="systemVolume" type="range" min="0" max="100" value="80" orient="vertical" /><label><input id="systemMute" type="checkbox" /> Ztlumit</label></div>
+      <div class="tray-popup media-tray-popup" id="mediaTrayPopup" aria-hidden="true"><div class="media-tray-head"><img id="trayMediaCover" src="./assets/nachtfahrer-cover-user.png" alt="" /><div><strong id="trayMediaTitle">Nachtfahrer</strong><span id="trayMediaState">Připraveno</span></div></div><div class="media-tray-controls"><button id="trayNachtfahrer" type="button" title="Nachtfahrer.mp3">N</button><button id="trayMediaPlay" type="button" title="Play/Pause">▶</button><button id="trayKiss" type="button" title="Rádio KISS">KISS</button></div><button class="media-tray-open" id="trayOpenWmp" type="button">Otevřít Windows Media Player</button></div>
+      <div class="tray-popup calendar-popup" id="calendarPopup" aria-hidden="true"><div class="calendar-head"><button id="calendarPrev" type="button">‹</button><strong id="calendarTitle"></strong><button id="calendarNext" type="button">›</button></div><div class="calendar-grid" id="calendarGrid"></div><button id="calendarToday" type="button">Dnes</button></div>
+
+      <aside class="start-menu" id="startMenu" aria-hidden="true">
+        <div class="start-menu-header">Hanz Garage</div>
+        <div class="start-menu-body">
+          <div class="start-left-column">
+            <a class="featured-program" href="https://www.instagram.com/hanz.mrdke" target="_blank" rel="noopener noreferrer"><img src="./assets/hanz-icon-norm.png" alt="" /><span><strong>Hanz</strong><small>Instagram</small></span></a>
+            <a class="featured-program" href="https://www.instagram.com/nachtfahrerpodcast/" target="_blank" rel="noopener noreferrer"><img class="wide-icon" src="./assets/nachtfahrer-icon-norm.png" alt="" /><span><strong>Nachtfahrer Podcast</strong><small>Instagram</small></span></a>
+            <div class="start-separator"></div>
+            <button class="start-program" data-app="internetExplorerWindow"><img src="./assets/ie-icon-norm.png" alt="" /><span>Internet Explorer</span></button>
+            <button class="start-program" data-app="minesweeperWindow"><img src="./assets/minesweeper-icon-norm.png" alt="" /><span>Hledání min</span></button>
+            <button class="start-program" data-app="solitaireWindow"><img src="./assets/solitaire-icon-norm.png" alt="" /><span>Solitaire</span></button>
+            <button class="start-program" data-app="paintWindow"><img src="./assets/paint-icon-norm.png" alt="" /><span>Malování</span></button>
+            <button class="start-program" data-app="notepadWindow"><img src="./assets/notepad-icon-norm.png" alt="" /><span>Poznámkový blok</span></button>
+            <button class="start-program" data-app="calculatorWindow"><img src="./assets/calculator-icon-norm.png" alt="" /><span>Kalkulačka</span></button>
+            <button class="start-program" data-app="mediaPlayerWindow"><img src="./assets/wmp-icon-norm.png" alt="" /><span>Windows Media Player</span></button>
+            <button class="start-program" data-app="taskManagerWindow"><img src="./assets/taskmgr-icon-norm.png" alt="" /><span>Správce úloh</span></button>
+            <button class="start-program" data-app="cmdWindow"><img src="./assets/cmd-icon-norm.png" alt="" /><span>Příkazový řádek</span></button>
+            <button class="start-program" data-app="soundRecorderWindow"><img src="./assets/sound-recorder-icon.png" alt="" /><span>Záznam zvuku</span></button>
+            <button class="start-program" data-app="documentsWindow"><img src="./assets/computer-icon-norm.png" alt="" /><span>Moje dokumenty</span></button>
+            <button class="start-program" data-app="snakeWindow"><img src="./assets/snake-icon.png" alt="" /><span>Had</span></button>
+            <a class="start-program external-start-program" href="https://www.youtube.com/@Nachtfahrer_podcast" target="_blank" rel="noopener noreferrer"><img src="./assets/youtube-icon-norm.png" alt="" /><span>YouTube</span></a>
+            <a class="start-program external-start-program" href="https://herohero.co/nachtfahrer" target="_blank" rel="noopener noreferrer"><img src="./assets/herohero-icon-norm.png" alt="" /><span>HeroHero</span></a>
+            <a class="start-program external-start-program" href="https://www.patreon.com/Nachtfahrer" target="_blank" rel="noopener noreferrer"><img src="./assets/patreon-icon-norm.png" alt="" /><span>Patreon</span></a>
+            <button class="all-programs-row" id="allProgramsButton" data-app="computerWindow"><span>Všechny programy</span><span class="all-programs-arrow"></span></button>
+          </div>
+          <div class="start-right-column">
+            <button data-app="computerWindow"><strong>Tento počítač</strong></button>
+            <button data-app="recycleBinWindow"><strong>Koš</strong></button>
+            <button data-app="documentsWindow"><strong>Dokumenty</strong></button>
+            <button data-app="mediaPlayerWindow"><strong>Windows Media Player</strong></button>
+            <button data-app="taskManagerWindow"><strong>Správce úloh</strong></button>
+            <button data-app="hanzCenterWindow"><strong>Hanz Garage Centrum</strong></button>
+            <div class="right-separator"></div>
+            <button data-app="controlPanelWindow"><strong>Ovládací panely</strong></button>
+            <button data-app="internetExplorerWindow"><strong>Připojit</strong></button>
+            <button data-app="searchWindow"><strong>Hledat</strong></button>
+            <button data-app="runDialogWindow"><strong>Spustit…</strong></button>
+            <div class="right-separator"></div>
+            <div class="right-label">Sociální sítě</div>
+            <a href="https://www.instagram.com/hanz.mrdke" target="_blank" rel="noopener noreferrer">Hanz</a>
+            <a href="https://www.instagram.com/nachtfahrerpodcast/" target="_blank" rel="noopener noreferrer">Nachtfahrer Podcast</a>
+            <a href="https://www.youtube.com/@Nachtfahrer_podcast" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="https://herohero.co/nachtfahrer" target="_blank" rel="noopener noreferrer">HeroHero</a>
+            <a href="https://www.patreon.com/Nachtfahrer" target="_blank" rel="noopener noreferrer">Patreon</a>
+          </div>
+        </div>
+        <div class="start-menu-footer">
+          <button class="session-button session-logoff" id="logoffButton" type="button"><img src="./assets/logoff-xp.png" alt="" /><span>Odhlásit se</span></button>
+          <button class="session-button session-shutdown" id="shutdownButton" type="button"><img src="./assets/shutdown-xp.png" alt="" /><span>Vypnout počítač</span></button>
+        </div>
+      </aside>
+
+      <div class="desktop-context-menu" id="desktopContextMenu" aria-hidden="true">
+        <button id="arrangeDesktopIcons">Uspořádat ikony podle mřížky</button>
+        <button id="toggleDesktopIcons">Zobrazit ikony na ploše ✓</button>
+        <button id="refreshDesktop">Aktualizovat</button>
+        <button id="desktopMoveToRecycle">Přesunout vybrané do Koše</button>
+        <div></div>
+        <button data-app="paintWindow">Nový obrázek</button>
+        <button data-app="notepadWindow">Nový textový dokument</button>
+        <button data-app="documentsWindow">Moje dokumenty</button>
+        <button data-app="solitaireWindow">Solitaire</button>
+        <div></div>
+        <button data-app="taskManagerWindow">Správce úloh</button>
+        <button data-app="cmdWindow">Příkazový řádek</button>
+        <button data-app="internetExplorerWindow">Internet Explorer</button>
+        <button data-app="hanzCenterWindow">Hanz Garage Centrum</button>
+        <div></div>
+        <button data-app="displayPropertiesWindow">Vlastnosti</button>
+      </div>
+      <div class="taskbar-context-menu" id="taskbarContextMenu" aria-hidden="true"><button id="cascadeWindows">Kaskádovitě</button><button id="tileWindowsHorizontal">Uspořádat vodorovně</button><button id="tileWindowsVertical">Uspořádat svisle</button><button id="taskbarShowDesktop">Zobrazit plochu</button><div></div><button data-app="taskManagerWindow">Správce úloh</button></div>
+      <div class="xp-balloon" id="xpBalloon" aria-hidden="true"><button id="xpBalloonClose" type="button">×</button><strong id="xpBalloonTitle">Hanz Garage XP</strong><span id="xpBalloonText">Systém je připraven.</span></div>
+      <div class="alt-tab-overlay" id="altTabOverlay" aria-hidden="true"><div class="alt-tab-box"><div class="alt-tab-items" id="altTabItems"></div><strong id="altTabTitle"></strong></div></div>
+      <div class="screensaver-overlay" id="screensaverOverlay" aria-hidden="true"><div class="screensaver-stars" id="screensaverStars"></div><img id="screensaverLogo" src="./assets/hanz-garage-logo.png" alt="Hanz Garage" /><span>Kliknutím nebo klávesou se vrátíš</span></div>
+    </section>
+
+    <audio id="startupAudio" preload="auto" playsinline src="./assets/xp-startup.mp3"></audio>
+    <button class="sound-unlock" id="soundUnlockButton" type="button" hidden>🔊 Kliknutím zapnout zvuk</button>
+
+    <div class="system-overlay" id="systemOverlay" aria-hidden="true">
+      <div class="system-overlay-content">
+        <img src="./assets/hanz-garage-logo.png" alt="Hanz Garage" />
+        <p id="systemOverlayText">Systém Windows se vypíná…</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
