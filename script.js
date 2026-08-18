@@ -216,8 +216,8 @@
     if (id === 'cmdWindow') setTimeout(() => document.getElementById('cmdInput')?.focus(), 40);
     if (id === 'internetExplorerWindow') setTimeout(() => { ieStartInfiniteLoading(); document.getElementById('ieAddress')?.focus(); }, 40);
     if (id === 'searchWindow') setTimeout(() => document.getElementById('xpSearchInput')?.focus(), 40);
-    if (id === 'minesweeperWindow') setTimeout(() => showGameProfile('mines'), 40);
-    if (id === 'snakeWindow') setTimeout(() => showGameProfile('snake'), 40);
+    if (id === 'minesweeperWindow') setTimeout(() => showGameProfile('mines','launch'), 40);
+    if (id === 'snakeWindow') setTimeout(() => showGameProfile('snake','launch'), 40);
     refreshTaskManagerUI();
   }
 
@@ -1133,27 +1133,109 @@
     const mineChip=document.getElementById('minePlayerChip');if(mineChip)mineChip.textContent=`Hráč: ${activeGamePlayers.mines||'—'}`;
     const snakeName=document.getElementById('snakePlayerName');if(snakeName)snakeName.textContent=activeGamePlayers.snake||'—';
   }
-  function showGameProfile(game){
-    if(!GAME_LEADERBOARD_KEYS[game]||!gameProfileDialog)return;activeProfileGame=game;
-    if(game==='snake'&&typeof snakeRunning!=='undefined'&&snakeRunning&&!snakePaused)toggleSnakePause();
+  let gameProfileMode='launch';
+  let gameProfilePausedSnake=false;
+
+  function showGameProfile(game,mode='launch'){
+    if(!GAME_LEADERBOARD_KEYS[game]||!gameProfileDialog)return;
+    activeProfileGame=game;
+    gameProfileMode=mode==='leaderboard'?'leaderboard':'launch';
+    gameProfilePausedSnake=false;
+    if(game==='snake'&&typeof snakeRunning!=='undefined'&&snakeRunning&&!snakePaused){
+      toggleSnakePause();
+      gameProfilePausedSnake=true;
+    }
     if(gameProfileTitle)gameProfileTitle.textContent=game==='mines'?'Hledání min — hráč a TOP 10':'Had — hráč a TOP 10';
     let saved='';try{saved=localStorage.getItem('hanzPlayerName')||'';}catch{}
     if(gamePlayerName)gamePlayerName.value=activeGamePlayers[game]||saved;
-    renderGameLeaderboard(game);gameProfileDialog.classList.add('is-open');gameProfileDialog.setAttribute('aria-hidden','false');
+    const playButton=document.getElementById('gameProfilePlay');
+    const cancelButton=document.getElementById('gameProfileCancel');
+    if(playButton)playButton.textContent=gameProfileMode==='launch'?'Spustit hru':'Použít jméno';
+    if(cancelButton)cancelButton.textContent=gameProfileMode==='launch'?'Storno':'Zavřít';
+    renderGameLeaderboard(game);
+    gameProfileDialog.hidden=false;
+    gameProfileDialog.classList.add('is-open');
+    gameProfileDialog.setAttribute('aria-hidden','false');
     refreshGameLeaderboard(game);
     setTimeout(()=>{gamePlayerName?.focus();gamePlayerName?.select();},20);
   }
-  function hideGameProfile(){gameProfileDialog?.classList.remove('is-open');gameProfileDialog?.setAttribute('aria-hidden','true');activeProfileGame=null;}
-  function acceptGameProfile(){
-    if(!activeProfileGame)return;const name=cleanPlayerName(gamePlayerName?.value);if(!name){gamePlayerName?.focus();return;}
-    activeGamePlayers[activeProfileGame]=name;try{localStorage.setItem('hanzPlayerName',name);}catch{}updateGamePlayerLabels();hideGameProfile();
+
+  function hideGameProfile(){
+    if(!gameProfileDialog)return;
+    gameProfileDialog.classList.remove('is-open');
+    gameProfileDialog.setAttribute('aria-hidden','true');
+    gameProfileDialog.hidden=true;
+    activeProfileGame=null;
+    gameProfileMode='launch';
   }
-  document.getElementById('gameProfilePlay')?.addEventListener('click',acceptGameProfile);
-  gamePlayerName?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();acceptGameProfile();}});
-  document.getElementById('gameProfileClose')?.addEventListener('click',()=>{const game=activeProfileGame;hideGameProfile();if(game)closeWindow(document.getElementById(game==='mines'?'minesweeperWindow':'snakeWindow'));});
-  document.getElementById('mineLeaderboardButton')?.addEventListener('click',()=>showGameProfile('mines'));
-  document.getElementById('snakeLeaderboardButton')?.addEventListener('click',()=>showGameProfile('snake'));
+
+  function cancelGameProfile(){
+    const game=activeProfileGame;
+    const wasLaunch=gameProfileMode==='launch';
+    const resumeSnake=game==='snake'&&gameProfilePausedSnake&&!wasLaunch;
+    hideGameProfile();
+    gameProfilePausedSnake=false;
+    if(resumeSnake&&typeof snakeRunning!=='undefined'&&snakeRunning&&snakePaused)toggleSnakePause();
+    if(wasLaunch&&game&&!activeGamePlayers[game]){
+      closeWindow(document.getElementById(game==='mines'?'minesweeperWindow':'snakeWindow'));
+    }
+  }
+
+  function acceptGameProfile(){
+    const game=activeProfileGame;
+    const mode=gameProfileMode;
+    const resumeSnake=game==='snake'&&gameProfilePausedSnake&&mode==='leaderboard';
+    if(!game)return;
+    const name=cleanPlayerName(gamePlayerName?.value);
+    if(!name){
+      gamePlayerName?.focus();
+      gamePlayerName?.classList.add('is-invalid');
+      setTimeout(()=>gamePlayerName?.classList.remove('is-invalid'),500);
+      return;
+    }
+    activeGamePlayers[game]=name;
+    try{localStorage.setItem('hanzPlayerName',name);}catch{}
+    updateGamePlayerLabels();
+    hideGameProfile();
+    gameProfilePausedSnake=false;
+    if(resumeSnake&&typeof snakeRunning!=='undefined'&&snakeRunning&&snakePaused)toggleSnakePause();
+
+    // Při prvním otevření tlačítko opravdu spustí novou hru.
+    if(mode==='launch'){
+      if(game==='mines'&&typeof resetMinesweeper==='function')resetMinesweeper();
+      if(game==='snake'&&typeof startSnake==='function')startSnake();
+    }
+  }
+
+  // Ovládání modalu řešíme delegovaně přímo na dialogu, aby ho
+  // nepřebily drag/drop a globální pointer listenery desktopu.
+  gameProfileDialog?.addEventListener('pointerdown',event=>event.stopPropagation());
+  gameProfileDialog?.addEventListener('click',event=>{
+    const button=event.target.closest('button');
+    if(!button||!gameProfileDialog.contains(button))return;
+    if(button.id==='gameProfilePlay'){
+      event.preventDefault();event.stopPropagation();acceptGameProfile();return;
+    }
+    if(button.id==='gameProfileClose'||button.id==='gameProfileCancel'){
+      event.preventDefault();event.stopPropagation();cancelGameProfile();return;
+    }
+  },true);
+  gameProfileDialog?.addEventListener('click',event=>{
+    if(event.target===gameProfileDialog){event.preventDefault();event.stopPropagation();cancelGameProfile();}
+  });
+  gamePlayerName?.addEventListener('keydown',event=>{
+    if(event.key==='Enter'){event.preventDefault();event.stopPropagation();acceptGameProfile();}
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();cancelGameProfile();}
+  });
+  document.getElementById('mineLeaderboardButton')?.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();showGameProfile('mines','leaderboard');});
+  document.getElementById('snakeLeaderboardButton')?.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();showGameProfile('snake','leaderboard');});
   updateGamePlayerLabels();
+
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&gameProfileDialog?.classList.contains('is-open')){
+      event.preventDefault();event.stopPropagation();cancelGameProfile();
+    }
+  },true);
 
   /* ---------------- Minesweeper ---------------- */
   const mineGrid = document.getElementById('mineGrid');

@@ -823,7 +823,7 @@ Web se připravuje. 🚗</textarea>
         </div>
       </aside>
 
-      <div class="game-profile-dialog" id="gameProfileDialog" aria-hidden="true">
+      <div class="game-profile-dialog" id="gameProfileDialog" aria-hidden="true" hidden>
         <div class="xp-dialog-card" role="dialog" aria-modal="true" aria-labelledby="gameProfileTitle">
           <div class="xp-dialog-titlebar"><span id="gameProfileTitle">Hráč</span><button id="gameProfileClose" type="button" aria-label="Zavřít">×</button></div>
           <div class="game-profile-body">
@@ -831,7 +831,10 @@ Web se připravuje. 🚗</textarea>
               <label for="gamePlayerName">Jméno hráče</label>
               <input id="gamePlayerName" maxlength="20" autocomplete="nickname" placeholder="Zadej jméno" />
               <small>Pod tímto jménem se ukládá tvoje nejlepší skóre do společného online TOP 10.</small><span class="leaderboard-status" id="gameLeaderboardStatus" aria-live="polite">Připojování k online žebříčku…</span>
-              <button id="gameProfilePlay" type="button">Hrát</button>
+              <div class="game-profile-actions">
+                <button id="gameProfilePlay" type="button">Hrát</button>
+                <button id="gameProfileCancel" type="button">Storno</button>
+              </div>
             </div>
             <div class="game-leaderboard-panel">
               <strong>TOP 10</strong>
