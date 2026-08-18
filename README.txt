@@ -1,4 +1,5 @@
 HANZ GARAGE XP — GitHub + Vercel optimized build
 
-![Hanz Garage](assets/hanz-garage-logo.webp)
-
+<p align="center">
+  <img src="assets/preview.png" width="900">
+</p>
