@@ -1049,7 +1049,12 @@
   drawWmpVisualizer();
   /* ---------------- Game profiles + shared online TOP 10 ---------------- */
   const GAME_LEADERBOARD_KEYS={mines:'hanzMinesLeaderboardV1',snake:'hanzSnakeLeaderboardV1'};
+  const GAME_PLAYER_KEYS={mines:'hanzMinesPlayerName',snake:'hanzSnakePlayerName'};
   const activeGamePlayers={mines:'',snake:''};
+  try{
+    activeGamePlayers.mines=String(localStorage.getItem(GAME_PLAYER_KEYS.mines)||'').replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,20);
+    activeGamePlayers.snake=String(localStorage.getItem(GAME_PLAYER_KEYS.snake)||'').replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,20);
+  }catch{}
   const onlineLeaderboardCache={mines:[],snake:[]};
   const onlineLeaderboardLoaded={mines:false,snake:false};
   let activeProfileGame=null;
@@ -1146,7 +1151,7 @@
       gameProfilePausedSnake=true;
     }
     if(gameProfileTitle)gameProfileTitle.textContent=game==='mines'?'Hledání min — hráč a TOP 10':'Had — hráč a TOP 10';
-    let saved='';try{saved=localStorage.getItem('hanzPlayerName')||'';}catch{}
+    let saved='';try{saved=localStorage.getItem(GAME_PLAYER_KEYS[game])||localStorage.getItem('hanzPlayerName')||'';}catch{}
     if(gamePlayerName)gamePlayerName.value=activeGamePlayers[game]||saved;
     const playButton=document.getElementById('gameProfilePlay');
     const cancelButton=document.getElementById('gameProfileCancel');
@@ -1194,8 +1199,12 @@
       return;
     }
     activeGamePlayers[game]=name;
-    try{localStorage.setItem('hanzPlayerName',name);}catch{}
+    try{
+      localStorage.setItem('hanzPlayerName',name);
+      localStorage.setItem(GAME_PLAYER_KEYS[game],name);
+    }catch{}
     updateGamePlayerLabels();
+    if(game==='mines')setTimeout(()=>{try{updateMinePlayerChip();}catch{}},0);
     hideGameProfile();
     gameProfilePausedSnake=false;
     if(resumeSnake&&typeof snakeRunning!=='undefined'&&snakeRunning&&snakePaused)toggleSnakePause();
@@ -1251,7 +1260,12 @@
   };
   let mineRows = 9, mineCols = 9, mineCount = 10;
   let mines = new Set(), opened = new Set(), flags = new Set(), questions = new Set();
-  let mineGameOver = false, mineStarted = false, mineSeconds = 0, mineInterval = null, mineTouchFlagMode = false;
+  let mineGameOver = false, mineStarted = false, mineSeconds = 0, mineInterval = null, mineTouchFlagMode = false, mineScore = 0, mineScoreSubmitted = false;
+  const mineDifficultyScoring={
+    beginner:{label:'Začátečník',cell:10,winBonus:1000,timePenalty:4},
+    intermediate:{label:'Pokročilý',cell:30,winBonus:3500,timePenalty:8},
+    expert:{label:'Expert',cell:70,winBonus:9000,timePenalty:12}
+  };
   const mineKey = (r,c) => `${r}:${c}`;
   const mineNeighbours = (r,c) => {
     const out=[];
@@ -1279,6 +1293,26 @@
     }
   }
   function updateMineCounter(){ mineCounter.textContent=mineFormatCounter(mineCount-flags.size); }
+  function mineScoring(){return mineDifficultyScoring[mineDifficulty?.value||'beginner']||mineDifficultyScoring.beginner;}
+  function updateMinePlayerChip(){
+    const chip=document.getElementById('minePlayerChip');
+    if(!chip)return;
+    const player=activeGamePlayers.mines||'—';
+    const diff=mineScoring();
+    chip.textContent=`Hráč: ${player} • Skóre: ${mineScore} • ${diff.label}`;
+    chip.title=`${diff.label}: ${diff.cell} bodů za bezpečné pole + bonus za výhru`;
+  }
+  async function submitMineScore({quiet=false}={}){
+    if(mineScoreSubmitted||mineScore<=0)return false;
+    const player=activeGamePlayers.mines;
+    if(!player)return false;
+    mineScoreSubmitted=true;
+    try{
+      const improved=await saveGameScore('mines',player,mineScore);
+      if(improved&&!quiet)showBalloon('Hledání min',`${player}: nové TOP skóre ${mineScore} bodů.`);
+      return improved;
+    }catch(error){mineScoreSubmitted=false;return false;}
+  }
   function getMineCell(k){ return mineGrid?.querySelector(`[data-key="${k}"]`); }
   function revealMineCell(r,c,fromChord=false){
     const k=mineKey(r,c);
@@ -1289,9 +1323,13 @@
       b?.classList.add('is-open','is-mine','is-exploded');
       if(b) b.textContent='✹';
       mineGameOver=true; stopMineTimer(); mineReset.textContent='😵'; revealAllMines();
+      updateMinePlayerChip();
+      submitMineScore({quiet:true});
       return false;
     }
     opened.add(k);
+    mineScore += mineScoring().cell;
+    updateMinePlayerChip();
     const b=getMineCell(k); if(!b) return true;
     b.classList.add('is-open'); b.classList.remove('is-question');
     const n=mineNearby(r,c); b.dataset.count=String(n); b.textContent=n?String(n):'';
@@ -1308,8 +1346,11 @@
       mineGameOver=true; stopMineTimer(); mineReset.textContent='😎';
       mines.forEach(k=>{if(!flags.has(k)){flags.add(k);const b=getMineCell(k);if(b){b.classList.add('is-flagged');b.textContent='⚑';}}});
       updateMineCounter();
-      const diff=mineDifficulty?.value||'beginner';const base={beginner:10000,intermediate:40000,expert:100000}[diff]||10000;const score=Math.max(1,base-mineSeconds*50);
-      const player=activeGamePlayers.mines;if(player){const chip=document.getElementById('minePlayerChip');if(chip)chip.textContent=`Hráč: ${player} • ${score} b.`;saveGameScore('mines',player,score).then(improved=>{if(improved)showBalloon('Hledání min',`${player}: nové TOP skóre ${score} bodů.`);}).catch(()=>{});}
+      const scoring=mineScoring();
+      const timeBonus=Math.max(0,scoring.winBonus-mineSeconds*scoring.timePenalty);
+      mineScore += timeBonus;
+      updateMinePlayerChip();
+      submitMineScore();
     }
   }
   function cycleMineMark(k){
@@ -1352,9 +1393,9 @@
     stopMineTimer();
     const preset=minePresets[mineDifficulty?.value||'beginner']||minePresets.beginner;
     mineRows=preset.rows; mineCols=preset.cols; mineCount=preset.count;
-    mines=new Set();opened=new Set();flags=new Set();questions=new Set();mineGameOver=false;mineStarted=false;mineSeconds=0;
+    mines=new Set();opened=new Set();flags=new Set();questions=new Set();mineGameOver=false;mineStarted=false;mineSeconds=0;mineScore=0;mineScoreSubmitted=false;
     mineTimer.textContent='000'; updateMineCounter(); mineReset.textContent='🙂'; mineGrid.innerHTML='';
-    const playerChip=document.getElementById('minePlayerChip');if(playerChip)playerChip.textContent=`Hráč: ${activeGamePlayers.mines||'—'}`;
+    updateMinePlayerChip();
     mineGrid.style.setProperty('--mine-cols',String(mineCols));
     for(let r=0;r<mineRows;r++) for(let c=0;c<mineCols;c++){
       const k=mineKey(r,c),b=document.createElement('button');
@@ -2716,25 +2757,85 @@
   /* ---------------- Factory reset ---------------- */
   const factoryResetDialog=document.getElementById('factoryResetDialog');
   const factoryResetCancel=document.getElementById('factoryResetCancel');
-  const factoryResetClose=document.getElementById('factoryResetClose');
   function showFactoryReset(event){
     event?.preventDefault?.();event?.stopPropagation?.();closeStartMenu();if(!factoryResetDialog)return;
-    factoryResetDialog.hidden=false;factoryResetDialog.classList.add('is-open');factoryResetDialog.setAttribute('aria-hidden','false');setTimeout(()=>factoryResetCancel?.focus(),0);
+    factoryResetDialog.hidden=false;
+    factoryResetDialog.classList.add('is-open');
+    factoryResetDialog.setAttribute('aria-hidden','false');
+    setTimeout(()=>factoryResetCancel?.focus(),20);
   }
   function hideFactoryReset(event){
     event?.preventDefault?.();event?.stopPropagation?.();if(!factoryResetDialog)return;
-    factoryResetDialog.classList.remove('is-open');factoryResetDialog.setAttribute('aria-hidden','true');factoryResetDialog.hidden=true;
+    factoryResetDialog.classList.remove('is-open');
+    factoryResetDialog.setAttribute('aria-hidden','true');
+    factoryResetDialog.hidden=true;
   }
+  async function clearHanzGarageLocalState(){
+    // Resetuje vše, co si Hanz Garage XP může uložit na tomto zařízení.
+    try{localStorage.clear();}catch{}
+    try{sessionStorage.clear();}catch{}
+    try{window.name='';}catch{}
+    try{
+      if('caches' in window){
+        const keys=await caches.keys();
+        await Promise.all(keys.map(key=>caches.delete(key)));
+      }
+    }catch{}
+    try{
+      if(navigator.serviceWorker?.getRegistrations){
+        const registrations=await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(reg=>reg.unregister()));
+      }
+    }catch{}
+    try{
+      if(window.indexedDB?.databases){
+        const databases=await window.indexedDB.databases();
+        await Promise.all((databases||[]).filter(db=>db?.name).map(db=>new Promise(resolve=>{
+          try{const req=window.indexedDB.deleteDatabase(db.name);req.onsuccess=req.onerror=req.onblocked=()=>resolve();}catch{resolve();}
+        })));
+      }
+    }catch{}
+    try{
+      document.cookie.split(';').forEach(cookie=>{
+        const name=cookie.split('=')[0]?.trim();
+        if(name)document.cookie=`${name}=; Max-Age=0; path=/; SameSite=Lax`;
+      });
+    }catch{}
+  }
+
   document.getElementById('factoryResetButton')?.addEventListener('click',showFactoryReset);
-  factoryResetCancel?.addEventListener('click',hideFactoryReset);
-  factoryResetClose?.addEventListener('click',hideFactoryReset);
-  factoryResetDialog?.addEventListener('click',event=>{if(event.target===factoryResetDialog)hideFactoryReset(event);});
-  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&factoryResetDialog?.classList.contains('is-open'))hideFactoryReset(event);});
-  document.getElementById('factoryResetConfirm')?.addEventListener('click',async(event)=>{
-    event.preventDefault();event.stopPropagation();try{localStorage.clear();sessionStorage.clear();}catch{}
-    try{if('caches' in window){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}}catch{}
-    location.reload();
-  });
+
+  // Stejně jako u herního dialogu používáme capture/delegaci, aby tlačítka
+  // nepohltily globální XP drag/pointer listenery.
+  factoryResetDialog?.addEventListener('pointerdown',event=>event.stopPropagation(),true);
+  factoryResetDialog?.addEventListener('mousedown',event=>event.stopPropagation(),true);
+  factoryResetDialog?.addEventListener('touchstart',event=>event.stopPropagation(),{capture:true,passive:true});
+  factoryResetDialog?.addEventListener('click',async event=>{
+    const button=event.target.closest('button');
+    if(button&&factoryResetDialog.contains(button)){
+      event.preventDefault();event.stopPropagation();
+      if(button.id==='factoryResetClose'||button.id==='factoryResetCancel'){
+        hideFactoryReset(event);
+        return;
+      }
+      if(button.id==='factoryResetConfirm'){
+        button.disabled=true;
+        button.textContent='Obnovuji…';
+        await clearHanzGarageLocalState();
+        // replace() zabrání návratu zpět do předresetovaného stavu přes historii.
+        location.replace(location.pathname+location.search);
+        return;
+      }
+    }
+    if(event.target===factoryResetDialog){
+      event.preventDefault();event.stopPropagation();hideFactoryReset(event);
+    }
+  },true);
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&factoryResetDialog?.classList.contains('is-open')){
+      event.preventDefault();event.stopPropagation();hideFactoryReset(event);
+    }
+  },true);
 
   scheduleStartupSound();
   setTimeout(()=>setStage('welcome'),5200);
