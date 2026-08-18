@@ -1,0 +1,43 @@
+name: Publish media release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'media/**'
+      - '.github/workflows/publish-media.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create or update media release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! gh release view media >/dev/null 2>&1; then
+            gh release create media \
+              --title "Hanz Garage media" \
+              --notes "Compressed media assets used by hanzgarage.cz"
+          fi
+
+          # GitHub Release assets are kept flat on purpose so the web can use
+          # stable URLs such as /releases/download/media/Nachtfahrer.mp3.
+          stage="$(mktemp -d)"
+          find media -type f -print0 | while IFS= read -r -d '' file; do
+            cp "$file" "$stage/$(basename "$file")"
+          done
+
+          if compgen -G "$stage/*" > /dev/null; then
+            gh release upload media "$stage"/* --clobber
+          fi

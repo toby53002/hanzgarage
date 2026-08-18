@@ -1,20 +1,30 @@
-HANZ GARAGE XP — statický web pro Vercel
+HANZ GARAGE XP — GitHub + Vercel optimized build
 
-Nasazení nové produkční verze ze složky projektu:
-  vercel --prod
+Nasazeni:
+- repo: https://github.com/toby53002/hanzgarage
+- Vercel je napojeny na branch main a po git push nasadi web automaticky.
+- `vercel --prod` uz neni potreba.
 
-Hlavní funkce:
-- Windows XP boot/welcome/desktop + startup audio
-- přesouvatelná, minimalizovatelná a maximalizovatelná XP okna
-- Hanz Garage interaktivní okno
-- Hledání min: 3 obtížnosti, pravé tlačítko, vlaječka/?, dlouhé podržení na mobilu, dotykový flag mód, chord odkrytí
-- Solitaire (Klondike): draw 1/3, stock/waste, tableau, foundations, skóre, čas, klikání i drag & drop, auto-finish
-- Malování: tužka, štětec, sprej, guma, výplň, kapátko, čára, obdélník, elipsa, text, levá/pravá barva, undo/redo, open/save PNG, zoom
-- Poznámkový blok: autosave, TXT export, hledání, zalamování
-- Kalkulačka: paměťové funkce + klávesnice
-- Tento počítač: historie, hledání, přepnutí zobrazení, složky, odkazy
-- Windows Media Player: Nachtfahrer.mp3, seek, volume, mute, loop, vlastní audio soubor
-- Správce úloh: otevřené aplikace, přepnout/ukončit, výkon
-- Spustit…: příkazy sol, winmine, mspaint, notepad, calc, wmplayer, taskmgr, explorer
-- XP kalendář a hlasitost v oznamovací oblasti
-- odkazy Hanz / Nachtfahrer / YouTube / HeroHero / Patreon
+Media mimo Vercel Fast Data Transfer:
+- komprimovane MP3 a plne fotky Archivu jsou ve slozce /media
+- GitHub Action `.github/workflows/publish-media.yml` je pri pushi automaticky nahraje do public GitHub Release s tagem `media`
+- web je pak nacita primo z GitHub Release
+- slozka /media je ve `.vercelignore`, takze ji Vercel neposila navstevnikum
+- Radio KISS zustava primo z play.cz
+
+Nove funkce:
+- Start -> Obnovit do tovarniho nastaveni
+- dialog obnoveni lze zavrit krizkem, tlacitkem Storno, Esc i kliknutim mimo dialog
+- Hledani min -> jmeno hrace + ONLINE TOP 10 + nejlepsi score per jmeno
+- Had -> jmeno hrace + ONLINE TOP 10 + nejlepsi score per jmeno
+- online TOP 10 je ulozeny serverove a je spolecny pro vsechny navstevniky
+
+JEDNORAZOVE NASTAVENI ONLINE LEADERBOARDU NA VERCELU:
+1) Vercel Dashboard -> projekt hanz-garage -> Marketplace / Storage.
+2) Nainstaluj `Upstash for Redis` a pripoj ho k tomuto projektu.
+3) Vytvor Redis databazi na Free planu.
+4) Integrace musi projektu pridat promenne UPSTASH_REDIS_REST_URL a UPSTASH_REDIS_REST_TOKEN.
+5) Po pripojeni databaze udelej Redeploy (nebo dalsi git push).
+6) Endpoint `/api/leaderboard` pak sdili TOP 10 mezi vsemi navstevniky.
+
+Bez databaze web nespadne; leaderboard se prepne na lokalni zalohu a ukaze chybovou hlasku. Tovarni reset maze jen data konkretniho prohlizece, ne globalni TOP 10.

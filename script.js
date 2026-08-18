@@ -16,6 +16,7 @@
   let desktopStartedOnce = false;
   const startupAudio = document.getElementById('startupAudio');
   const soundUnlockButton = document.getElementById('soundUnlockButton');
+  const MEDIA_BASE = 'https://github.com/toby53002/hanzgarage/releases/download/media';
   let startupPlayTimer = null;
 
   function hideSoundUnlock() {
@@ -25,6 +26,7 @@
   async function playStartupSound({ restart = true } = {}) {
     if (!startupAudio) return false;
     try {
+      if (!startupAudio.getAttribute('src')) { startupAudio.src = `${MEDIA_BASE}/xp-startup.mp3`; startupAudio.load(); }
       startupAudio.volume = 0.78;
       startupAudio.muted = false;
       if (restart) startupAudio.currentTime = 0;
@@ -214,6 +216,8 @@
     if (id === 'cmdWindow') setTimeout(() => document.getElementById('cmdInput')?.focus(), 40);
     if (id === 'internetExplorerWindow') setTimeout(() => { ieStartInfiniteLoading(); document.getElementById('ieAddress')?.focus(); }, 40);
     if (id === 'searchWindow') setTimeout(() => document.getElementById('xpSearchInput')?.focus(), 40);
+    if (id === 'minesweeperWindow') setTimeout(() => showGameProfile('mines'), 40);
+    if (id === 'snakeWindow') setTimeout(() => showGameProfile('snake'), 40);
     refreshTaskManagerUI();
   }
 
@@ -550,9 +554,9 @@
   const wmpCoverArt = document.getElementById('wmpCoverArt');
   const wmpVizModeButton = document.getElementById('wmpVizModeButton');
   const wmpCoverButton = document.getElementById('wmpCoverButton');
-  const WMP_DEFAULT_TRACK = './assets/Nachtfahrer.mp3';
-  const WMP_COVER_NACHT = './assets/nachtfahrer-cover-user.png';
-  const WMP_COVER_KISS = './assets/radio-kiss-cover-user.png';
+  const WMP_DEFAULT_TRACK = `${MEDIA_BASE}/Nachtfahrer.mp3`;
+  const WMP_COVER_NACHT = './assets/nachtfahrer-cover-user.webp';
+  const WMP_COVER_KISS = './assets/radio-kiss-cover-user.webp';
   const WMP_COVER_GENERIC = './assets/wmp-icon-norm.png';
   const WMP_KISS_STREAMS = [
     'https://icecast1.play.cz/kiss128.mp3',
@@ -718,6 +722,7 @@
   async function playWmp() {
     if (!wmpAudio) return;
     try {
+      if (!wmpRadioMode && !wmpAudio.getAttribute('src')) { wmpAudio.src = WMP_DEFAULT_TRACK; wmpAudio.load(); }
       // Use the native media element directly. This is considerably more reliable
       // than routing every playback through WebAudio and works on Vercel/mobile.
       wmpAudio.muted = false;
@@ -1042,6 +1047,114 @@
     wmpVizFrame=requestAnimationFrame(drawWmpVisualizer);
   }
   drawWmpVisualizer();
+  /* ---------------- Game profiles + shared online TOP 10 ---------------- */
+  const GAME_LEADERBOARD_KEYS={mines:'hanzMinesLeaderboardV1',snake:'hanzSnakeLeaderboardV1'};
+  const activeGamePlayers={mines:'',snake:''};
+  const onlineLeaderboardCache={mines:[],snake:[]};
+  const onlineLeaderboardLoaded={mines:false,snake:false};
+  let activeProfileGame=null;
+  const gameProfileDialog=document.getElementById('gameProfileDialog');
+  const gameProfileTitle=document.getElementById('gameProfileTitle');
+  const gamePlayerName=document.getElementById('gamePlayerName');
+  const gameLeaderboardList=document.getElementById('gameLeaderboardList');
+  const gameLeaderboardStatus=document.getElementById('gameLeaderboardStatus');
+
+  function cleanPlayerName(value){return String(value||'').normalize('NFKC').replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,20);}
+  function normalizePlayerName(value){return cleanPlayerName(value).toLocaleLowerCase('cs-CZ');}
+  function getLocalGameLeaderboard(game){
+    try{const rows=JSON.parse(localStorage.getItem(GAME_LEADERBOARD_KEYS[game])||'[]');return Array.isArray(rows)?rows.filter(x=>x&&x.name&&Number.isFinite(Number(x.score))).map(x=>({name:cleanPlayerName(x.name),score:Number(x.score),date:Number(x.date)||0})).sort((a,b)=>b.score-a.score||a.date-b.date).slice(0,10):[];}catch{return[];}
+  }
+  function saveLocalGameScore(game,name,score){
+    name=cleanPlayerName(name);score=Math.max(0,Math.round(Number(score)||0));if(!name||!score)return false;
+    const rows=getLocalGameLeaderboard(game),idx=rows.findIndex(x=>normalizePlayerName(x.name)===normalizePlayerName(name));
+    if(idx>=0){if(score<=rows[idx].score)return false;rows[idx]={name,score,date:Date.now()};}else rows.push({name,score,date:Date.now()});
+    rows.sort((a,b)=>b.score-a.score||a.date-b.date);const top=rows.slice(0,10);
+    try{localStorage.setItem(GAME_LEADERBOARD_KEYS[game],JSON.stringify(top));}catch{}
+    return true;
+  }
+  function setLeaderboardStatus(text,state=''){
+    if(!gameLeaderboardStatus)return;
+    gameLeaderboardStatus.textContent=text||'';
+    gameLeaderboardStatus.classList.toggle('is-error',state==='error');
+    gameLeaderboardStatus.classList.toggle('is-ok',state==='ok');
+  }
+  function getGameLeaderboard(game){
+    const online=onlineLeaderboardCache[game];
+    return onlineLeaderboardLoaded[game]&&Array.isArray(online)?online:getLocalGameLeaderboard(game);
+  }
+  function renderGameLeaderboard(game){
+    if(!gameLeaderboardList)return;const rows=getGameLeaderboard(game);gameLeaderboardList.innerHTML='';
+    if(!rows.length){const li=document.createElement('li');li.className='is-empty';li.textContent='Zatím žádné skóre';gameLeaderboardList.appendChild(li);return;}
+    rows.forEach((row,i)=>{const li=document.createElement('li');const pos=document.createElement('span'),name=document.createElement('b'),score=document.createElement('strong');pos.textContent=`${i+1}.`;name.textContent=row.name;score.textContent=String(row.score);li.append(pos,name,score);gameLeaderboardList.appendChild(li);});
+  }
+  async function refreshGameLeaderboard(game,{quiet=false}={}){
+    if(!GAME_LEADERBOARD_KEYS[game])return [];
+    if(!quiet)setLeaderboardStatus('Načítám společný online TOP 10…');
+    try{
+      const response=await fetch(`/api/leaderboard?game=${encodeURIComponent(game)}`,{headers:{Accept:'application/json'},cache:'no-store'});
+      if(!response.ok)throw new Error(`HTTP ${response.status}`);
+      const data=await response.json();
+      if(!data||!Array.isArray(data.rows))throw new Error('Neplatná odpověď serveru');
+      onlineLeaderboardCache[game]=data.rows.map(row=>({name:cleanPlayerName(row.name),score:Math.max(0,Math.round(Number(row.score)||0))})).filter(row=>row.name&&row.score>0).slice(0,10);
+      onlineLeaderboardLoaded[game]=true;
+      if(activeProfileGame===game)renderGameLeaderboard(game);
+      if(!quiet)setLeaderboardStatus('Online TOP 10 • společný pro všechny návštěvníky','ok');
+      return onlineLeaderboardCache[game];
+    }catch(error){
+      console.warn('Online leaderboard není dostupný.',error);
+      onlineLeaderboardLoaded[game]=false;
+      if(activeProfileGame===game){onlineLeaderboardCache[game]=[];renderGameLeaderboard(game);}
+      if(!quiet)setLeaderboardStatus('Online TOP 10 není připojený — zobrazuji lokální zálohu.','error');
+      return getLocalGameLeaderboard(game);
+    }
+  }
+  async function saveGameScore(game,name,score){
+    name=cleanPlayerName(name);score=Math.max(0,Math.round(Number(score)||0));
+    if(!GAME_LEADERBOARD_KEYS[game]||!name||!score)return false;
+    const localImproved=saveLocalGameScore(game,name,score);
+    try{
+      const response=await fetch('/api/leaderboard',{
+        method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({game,name,score})
+      });
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data?.error||`HTTP ${response.status}`);
+      if(Array.isArray(data.rows)){
+        onlineLeaderboardCache[game]=data.rows.map(row=>({name:cleanPlayerName(row.name),score:Math.max(0,Math.round(Number(row.score)||0))})).filter(row=>row.name&&row.score>0).slice(0,10);
+        onlineLeaderboardLoaded[game]=true;
+        if(activeProfileGame===game)renderGameLeaderboard(game);
+      }else await refreshGameLeaderboard(game,{quiet:true});
+      return Boolean(data.improved);
+    }catch(error){
+      console.warn('Skóre se nepodařilo odeslat do online leaderboardu.',error);
+      return localImproved;
+    }
+  }
+  function updateGamePlayerLabels(){
+    const mineChip=document.getElementById('minePlayerChip');if(mineChip)mineChip.textContent=`Hráč: ${activeGamePlayers.mines||'—'}`;
+    const snakeName=document.getElementById('snakePlayerName');if(snakeName)snakeName.textContent=activeGamePlayers.snake||'—';
+  }
+  function showGameProfile(game){
+    if(!GAME_LEADERBOARD_KEYS[game]||!gameProfileDialog)return;activeProfileGame=game;
+    if(game==='snake'&&typeof snakeRunning!=='undefined'&&snakeRunning&&!snakePaused)toggleSnakePause();
+    if(gameProfileTitle)gameProfileTitle.textContent=game==='mines'?'Hledání min — hráč a TOP 10':'Had — hráč a TOP 10';
+    let saved='';try{saved=localStorage.getItem('hanzPlayerName')||'';}catch{}
+    if(gamePlayerName)gamePlayerName.value=activeGamePlayers[game]||saved;
+    renderGameLeaderboard(game);gameProfileDialog.classList.add('is-open');gameProfileDialog.setAttribute('aria-hidden','false');
+    refreshGameLeaderboard(game);
+    setTimeout(()=>{gamePlayerName?.focus();gamePlayerName?.select();},20);
+  }
+  function hideGameProfile(){gameProfileDialog?.classList.remove('is-open');gameProfileDialog?.setAttribute('aria-hidden','true');activeProfileGame=null;}
+  function acceptGameProfile(){
+    if(!activeProfileGame)return;const name=cleanPlayerName(gamePlayerName?.value);if(!name){gamePlayerName?.focus();return;}
+    activeGamePlayers[activeProfileGame]=name;try{localStorage.setItem('hanzPlayerName',name);}catch{}updateGamePlayerLabels();hideGameProfile();
+  }
+  document.getElementById('gameProfilePlay')?.addEventListener('click',acceptGameProfile);
+  gamePlayerName?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();acceptGameProfile();}});
+  document.getElementById('gameProfileClose')?.addEventListener('click',()=>{const game=activeProfileGame;hideGameProfile();if(game)closeWindow(document.getElementById(game==='mines'?'minesweeperWindow':'snakeWindow'));});
+  document.getElementById('mineLeaderboardButton')?.addEventListener('click',()=>showGameProfile('mines'));
+  document.getElementById('snakeLeaderboardButton')?.addEventListener('click',()=>showGameProfile('snake'));
+  updateGamePlayerLabels();
+
   /* ---------------- Minesweeper ---------------- */
   const mineGrid = document.getElementById('mineGrid');
   const mineReset = document.getElementById('mineReset');
@@ -1113,6 +1226,8 @@
       mineGameOver=true; stopMineTimer(); mineReset.textContent='😎';
       mines.forEach(k=>{if(!flags.has(k)){flags.add(k);const b=getMineCell(k);if(b){b.classList.add('is-flagged');b.textContent='⚑';}}});
       updateMineCounter();
+      const diff=mineDifficulty?.value||'beginner';const base={beginner:10000,intermediate:40000,expert:100000}[diff]||10000;const score=Math.max(1,base-mineSeconds*50);
+      const player=activeGamePlayers.mines;if(player){const chip=document.getElementById('minePlayerChip');if(chip)chip.textContent=`Hráč: ${player} • ${score} b.`;saveGameScore('mines',player,score).then(improved=>{if(improved)showBalloon('Hledání min',`${player}: nové TOP skóre ${score} bodů.`);}).catch(()=>{});}
     }
   }
   function cycleMineMark(k){
@@ -1157,6 +1272,7 @@
     mineRows=preset.rows; mineCols=preset.cols; mineCount=preset.count;
     mines=new Set();opened=new Set();flags=new Set();questions=new Set();mineGameOver=false;mineStarted=false;mineSeconds=0;
     mineTimer.textContent='000'; updateMineCounter(); mineReset.textContent='🙂'; mineGrid.innerHTML='';
+    const playerChip=document.getElementById('minePlayerChip');if(playerChip)playerChip.textContent=`Hráč: ${activeGamePlayers.mines||'—'}`;
     mineGrid.style.setProperty('--mine-cols',String(mineCols));
     for(let r=0;r<mineRows;r++) for(let c=0;c<mineCols;c++){
       const k=mineKey(r,c),b=document.createElement('button');
@@ -2215,7 +2331,7 @@
     const solid={blue:'#3a6ea5',black:'#000',green:'#2e8b57'};
     const isImage=wallpaper==='bliss'||(wallpaper==='custom'&&customWallpaperObjectUrl);
     target.style.backgroundColor=solid[wallpaper]||(wallpaper==='custom'?'#5ea1e9':'#5ea1e9');
-    target.style.backgroundImage=wallpaper==='bliss'?"url('./assets/xp-wallpaper.jpg')":wallpaper==='custom'&&customWallpaperObjectUrl?`url("${customWallpaperObjectUrl}")`:'none';
+    target.style.backgroundImage=wallpaper==='bliss'?"url('./assets/xp-wallpaper.webp')":wallpaper==='custom'&&customWallpaperObjectUrl?`url("${customWallpaperObjectUrl}")`:'none';
     target.style.backgroundPosition='center';
     target.style.backgroundRepeat=position==='repeat'&&isImage?'repeat':'no-repeat';
     if(position==='repeat'&&isImage)target.style.backgroundSize=isPreview?'82px auto':'auto';
@@ -2451,7 +2567,7 @@
   function snakeSetDir(x,y){if(!snakeRunning||snakePaused)return;if(x===-snakeDir.x&&y===-snakeDir.y)return;snakeNextDir={x,y};}
   function snakeStep(){if(!snakeRunning||snakePaused)return;snakeDir=snakeNextDir;const head={x:snake[0].x+snakeDir.x,y:snake[0].y+snakeDir.y};if(head.x<0||head.y<0||head.x>=snakeCols||head.y>=snakeRows||snake.some(p=>p.x===head.x&&p.y===head.y)){endSnake();return;}snake.unshift(head);if(head.x===snakeFood.x&&head.y===snakeFood.y){snakeScore+=10;if(snakeScoreEl)snakeScoreEl.textContent=String(snakeScore);if(snakeScore>snakeHigh){snakeHigh=snakeScore;if(snakeHighScoreEl)snakeHighScoreEl.textContent=String(snakeHigh);try{localStorage.setItem('hanzSnakeHigh',String(snakeHigh));}catch{}}placeSnakeFood();clearInterval(snakeTimer);snakeTimer=setInterval(snakeStep,Math.max(60,125-Math.floor(snakeScore/50)*8));}else snake.pop();drawSnake();}
   function startSnake(){clearInterval(snakeTimer);snake=[{x:6,y:8},{x:5,y:8},{x:4,y:8}];snakeDir=snakeNextDir={x:1,y:0};snakeScore=0;if(snakeScoreEl)snakeScoreEl.textContent='0';snakeRunning=true;snakePaused=false;placeSnakeFood();snakeOverlay?.classList.add('is-hidden');const sb=document.getElementById('snakeStart');if(sb)sb.textContent='Spustit hru';const pb=document.getElementById('snakePause');if(pb)pb.textContent='Pozastavit';drawSnake();snakeTimer=setInterval(snakeStep,125);}
-  function endSnake(){clearInterval(snakeTimer);snakeTimer=0;snakeRunning=false;if(snakeOverlay){snakeOverlay.classList.remove('is-hidden');snakeOverlay.querySelector('strong').textContent='Konec hry';snakeOverlay.querySelector('span').textContent=`Skóre: ${snakeScore}`;const b=document.getElementById('snakeStart');if(b)b.textContent='Hrát znovu';}}
+  function endSnake(){clearInterval(snakeTimer);snakeTimer=0;snakeRunning=false;const player=activeGamePlayers.snake;if(player&&snakeScore>0){saveGameScore('snake',player,snakeScore).then(improved=>{if(improved)showBalloon('Had',`${player}: nové TOP skóre ${snakeScore} bodů.`);}).catch(()=>{});}if(snakeOverlay){snakeOverlay.classList.remove('is-hidden');snakeOverlay.querySelector('strong').textContent='Konec hry';snakeOverlay.querySelector('span').textContent=`${player?player+' • ':''}Skóre: ${snakeScore}`;const b=document.getElementById('snakeStart');if(b)b.textContent='Hrát znovu';}}
   function toggleSnakePause(){if(!snakeRunning)return;snakePaused=!snakePaused;const b=document.getElementById('snakePause');if(b)b.textContent=snakePaused?'Pokračovat':'Pozastavit';if(snakeOverlay){snakeOverlay.classList.toggle('is-hidden',!snakePaused);if(snakePaused){snakeOverlay.querySelector('strong').textContent='Pozastaveno';snakeOverlay.querySelector('span').textContent='Klikni na Pokračovat nebo stiskni mezerník';const sb=document.getElementById('snakeStart');if(sb)sb.textContent='Pokračovat';}else{const sb=document.getElementById('snakeStart');if(sb)sb.textContent='Spustit hru';}}}
   document.getElementById('snakeStart')?.addEventListener('click',()=>{if(snakeRunning&&snakePaused)toggleSnakePause();else startSnake();});document.getElementById('snakeNew')?.addEventListener('click',startSnake);document.getElementById('snakePause')?.addEventListener('click',toggleSnakePause);document.querySelectorAll('[data-snake-dir]').forEach(b=>b.addEventListener('click',()=>{const d=b.dataset.snakeDir;if(d==='up')snakeSetDir(0,-1);if(d==='down')snakeSetDir(0,1);if(d==='left')snakeSetDir(-1,0);if(d==='right')snakeSetDir(1,0);}));
   document.addEventListener('keydown',e=>{const win=document.getElementById('snakeWindow');if(!win?.classList.contains('is-open')||win.classList.contains('is-minimized')||!win.classList.contains('is-active-window')||e.target.matches('input,textarea'))return;const k=e.key.toLowerCase();if(['arrowup','w'].includes(k)){e.preventDefault();snakeSetDir(0,-1);}else if(['arrowdown','s'].includes(k)){e.preventDefault();snakeSetDir(0,1);}else if(['arrowleft','a'].includes(k)){e.preventDefault();snakeSetDir(-1,0);}else if(['arrowright','d'].includes(k)){e.preventDefault();snakeSetDir(1,0);}else if(e.code==='Space'){e.preventDefault();toggleSnakePause();}});drawSnake();
@@ -2481,7 +2597,8 @@
 
   function openArchivePhotoInPaint(item) {
     if (!item) return;
-    const src = item.dataset.src, name = item.dataset.name || 'Obrázek';
+    const media = item.dataset.media, name = item.dataset.name || 'Obrázek';
+    const src = media ? `${MEDIA_BASE}/${encodeURIComponent(media)}` : '';
     if (!src || !canvas || !ctx) return;
     const img = new Image();
     img.onload = () => {
@@ -2513,6 +2630,29 @@
   document.getElementById('archiveBack')?.addEventListener('click',()=>closeWindow(document.getElementById('archiveWindow')));
   document.getElementById('archiveUp')?.addEventListener('click',()=>{closeWindow(document.getElementById('archiveWindow'));});
   document.getElementById('archiveSearch')?.addEventListener('click',()=>openWindow('searchWindow'));
+
+  /* ---------------- Factory reset ---------------- */
+  const factoryResetDialog=document.getElementById('factoryResetDialog');
+  const factoryResetCancel=document.getElementById('factoryResetCancel');
+  const factoryResetClose=document.getElementById('factoryResetClose');
+  function showFactoryReset(event){
+    event?.preventDefault?.();event?.stopPropagation?.();closeStartMenu();if(!factoryResetDialog)return;
+    factoryResetDialog.hidden=false;factoryResetDialog.classList.add('is-open');factoryResetDialog.setAttribute('aria-hidden','false');setTimeout(()=>factoryResetCancel?.focus(),0);
+  }
+  function hideFactoryReset(event){
+    event?.preventDefault?.();event?.stopPropagation?.();if(!factoryResetDialog)return;
+    factoryResetDialog.classList.remove('is-open');factoryResetDialog.setAttribute('aria-hidden','true');factoryResetDialog.hidden=true;
+  }
+  document.getElementById('factoryResetButton')?.addEventListener('click',showFactoryReset);
+  factoryResetCancel?.addEventListener('click',hideFactoryReset);
+  factoryResetClose?.addEventListener('click',hideFactoryReset);
+  factoryResetDialog?.addEventListener('click',event=>{if(event.target===factoryResetDialog)hideFactoryReset(event);});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&factoryResetDialog?.classList.contains('is-open'))hideFactoryReset(event);});
+  document.getElementById('factoryResetConfirm')?.addEventListener('click',async(event)=>{
+    event.preventDefault();event.stopPropagation();try{localStorage.clear();sessionStorage.clear();}catch{}
+    try{if('caches' in window){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}}catch{}
+    location.reload();
+  });
 
   scheduleStartupSound();
   setTimeout(()=>setStage('welcome'),5200);
