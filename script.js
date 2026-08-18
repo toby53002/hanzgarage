@@ -17,26 +17,52 @@
   const startupAudio = document.getElementById('startupAudio');
   const soundUnlockButton = document.getElementById('soundUnlockButton');
   const MEDIA_BASE = 'https://github.com/toby53002/hanzgarage/releases/download/media';
+  // Audio uses GitHub raw instead of Release assets. Release downloads are served as
+  // application/octet-stream/attachment, which is unreliable in iOS/Safari media elements.
+  // raw.githubusercontent.com serves these MP3 files as audio/mpeg while still keeping
+  // the traffic completely outside Vercel.
+  const AUDIO_BASE = 'https://raw.githubusercontent.com/toby53002/hanzgarage/main/media';
   let startupPlayTimer = null;
 
   function hideSoundUnlock() {
-    if (soundUnlockButton) soundUnlockButton.hidden = true;
+    if (!soundUnlockButton) return;
+    soundUnlockButton.hidden = true;
+    soundUnlockButton.disabled = false;
+    soundUnlockButton.textContent = '🔊 Kliknutím zapnout zvuk';
+  }
+
+  function showSoundUnlock(message = '🔊 Kliknutím zapnout zvuk') {
+    if (!soundUnlockButton) return;
+    soundUnlockButton.hidden = false;
+    soundUnlockButton.disabled = false;
+    soundUnlockButton.textContent = message;
+  }
+
+  function prepareStartupAudio({ restart = true } = {}) {
+    if (!startupAudio) return false;
+    // Do not call load() here. On iOS the play() call must stay in the exact same
+    // user-activation task as the tap; setting src is enough to start loading.
+    if (!startupAudio.getAttribute('src')) startupAudio.src = `${AUDIO_BASE}/xp-startup.mp3`;
+    startupAudio.playsInline = true;
+    startupAudio.setAttribute('playsinline', '');
+    startupAudio.setAttribute('webkit-playsinline', '');
+    startupAudio.volume = 0.78;
+    startupAudio.muted = false;
+    if (restart) {
+      try { startupAudio.currentTime = 0; } catch {}
+    }
+    return true;
   }
 
   async function playStartupSound({ restart = true } = {}) {
-    if (!startupAudio) return false;
+    if (!prepareStartupAudio({ restart })) return false;
     try {
-      if (!startupAudio.getAttribute('src')) { startupAudio.src = `${MEDIA_BASE}/xp-startup.mp3`; startupAudio.load(); }
-      startupAudio.volume = 0.78;
-      startupAudio.muted = false;
-      if (restart) startupAudio.currentTime = 0;
       await startupAudio.play();
       hideSoundUnlock();
       return true;
     } catch (error) {
-      // Browsers can block audible autoplay until the first user gesture.
-      // Keep a small XP-style fallback so sound still works on mobile/strict browsers.
-      if (soundUnlockButton) soundUnlockButton.hidden = false;
+      // Audible autoplay is expected to fail on iOS/Android until a real tap.
+      showSoundUnlock();
       console.info('Startup audio čeká na uživatelské gesto.', error);
       return false;
     }
@@ -47,10 +73,52 @@
     startupPlayTimer = setTimeout(() => playStartupSound({ restart: true }), 820);
   }
 
-  soundUnlockButton?.addEventListener('click', async (event) => {
-    event.stopPropagation();
-    await playStartupSound({ restart: true });
-  });
+  let lastSoundUnlockGesture = 0;
+  function unlockStartupSoundFromGesture(event) {
+    const now = performance.now();
+    // pointerup can be followed by a synthetic click; one physical tap should play once.
+    if (now - lastSoundUnlockGesture < 450) {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      return;
+    }
+    lastSoundUnlockGesture = now;
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+    event?.stopImmediatePropagation?.();
+    if (startupPlayTimer) { clearTimeout(startupPlayTimer); startupPlayTimer = null; }
+    if (!prepareStartupAudio({ restart: true })) return;
+
+    // IMPORTANT: call play() synchronously inside the pointer/touch/click handler.
+    // Awaiting another task first would lose Safari's transient user activation.
+    soundUnlockButton.disabled = true;
+    soundUnlockButton.textContent = '🔊 Zapínám zvuk…';
+    let playPromise;
+    try {
+      playPromise = startupAudio.play();
+    } catch (error) {
+      showSoundUnlock('🔊 Klepni znovu pro zvuk');
+      console.info('Zvuk se nepodařilo odemknout.', error);
+      return;
+    }
+    Promise.resolve(playPromise).then(() => {
+      hideSoundUnlock();
+    }).catch(error => {
+      showSoundUnlock('🔊 Klepni znovu pro zvuk');
+      console.info('Zvuk se nepodařilo odemknout.', error);
+    });
+  }
+
+  if (soundUnlockButton) {
+    // pointerup is the most reliable direct gesture on modern mobile browsers.
+    // touchend is kept for older iOS; click remains the keyboard/desktop fallback.
+    if ('PointerEvent' in window) {
+      soundUnlockButton.addEventListener('pointerup', unlockStartupSoundFromGesture, { capture: true });
+    } else {
+      soundUnlockButton.addEventListener('touchend', unlockStartupSoundFromGesture, { capture: true, passive: false });
+    }
+    soundUnlockButton.addEventListener('click', unlockStartupSoundFromGesture, { capture: true });
+  }
   startupAudio?.addEventListener('ended', hideSoundUnlock);
 
   const isMobile = () => window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 620;
@@ -554,7 +622,7 @@
   const wmpCoverArt = document.getElementById('wmpCoverArt');
   const wmpVizModeButton = document.getElementById('wmpVizModeButton');
   const wmpCoverButton = document.getElementById('wmpCoverButton');
-  const WMP_DEFAULT_TRACK = `${MEDIA_BASE}/Nachtfahrer.mp3`;
+  const WMP_DEFAULT_TRACK = `${AUDIO_BASE}/Nachtfahrer.mp3`;
   const WMP_COVER_NACHT = './assets/nachtfahrer-cover-user.webp';
   const WMP_COVER_KISS = './assets/radio-kiss-cover-user.webp';
   const WMP_COVER_GENERIC = './assets/wmp-icon-norm.png';
